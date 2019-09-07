@@ -1,12 +1,22 @@
 package i.talk.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import i.talk.services.PubSubService;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
 @Data
+//@AllArgsConstructor
+@NoArgsConstructor
+@Setter
 public class Participant{
+
+	private String operation;
 
 	private Long id = 0L;
 
@@ -25,6 +35,9 @@ public class Participant{
 		this.name = name;
 	}
 
+
+
+
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -39,7 +52,16 @@ public class Participant{
 		return name;
 	}
 
-	//private Set<Message> subscriberMessages = new HashSet<>();
+    @Override
+    public String toString() {
+        return "Participant{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", subscribedMessages=" + subscribedMessages +
+                '}';
+    }
+
+    private Set<Message> subscribedMessages = new HashSet<>();
 
 	//public void setSubscriberMessages(Set<Message> subscriberMessages) {
 	//	this.subscriberMessages = subscriberMessages;
@@ -69,7 +91,7 @@ public class Participant{
 	}*/
 
 	public ChatSession join(String session, PubSubService pubSubService){
-		pubSubService.addParticipant(session, this);
+		//pubSubService.addParticipant(session, this);
 		return new ChatSession(session);
 	}
 

@@ -1,4 +1,4 @@
-package i.talk;
+/*package i.talk;
 
 import i.talk.domain.Message;
 import i.talk.domain.Participant;
@@ -173,4 +173,4 @@ public class ChatTest {
 //vaatad unit teste ja katsud lihtsutada. kui liiga raske siis lihtsusta edasi
 
 
-}
+}*/

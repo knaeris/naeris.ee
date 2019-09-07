@@ -1,10 +1,15 @@
 package i.talk.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Setter;
+
+@Setter
 public class Message {
 
 	//private String chat;
+
 	private String payload;
-	private Participant sender;
+    private Participant sender;
 
 	public Message(String payload, Participant sender) {
 		this.payload = payload;
