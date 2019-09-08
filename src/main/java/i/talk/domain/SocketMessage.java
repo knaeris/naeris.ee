@@ -1,26 +1,17 @@
 package i.talk.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class SocketMessage extends Message {
-    @JsonProperty("operation")
+@AllArgsConstructor
+@NoArgsConstructor
+public class SocketMessage {
+
     private String operation;
+    private String objectJSON;
 
-    public SocketMessage(String payload, Participant sender, String operation) {
-        super(payload, sender);
-        this.operation = operation;
-    }
-
-    public SocketMessage(String operation) {
-        this.operation = operation;
-    }
-
-    public SocketMessage(String payload, String operation) {
-        super(payload);
-        this.operation = operation;
-    }
 }

@@ -1,7 +1,5 @@
 package i.talk.services;
 
-
-import i.talk.domain.ChatSession;
 import i.talk.domain.Message;
 import i.talk.domain.Participant;
 import org.springframework.stereotype.Service;
@@ -84,21 +82,6 @@ public class PubSubService {
 		}
 		return new HashSet<>();
 	}
-
-/*	public void removeMessageFromAllParticipants(Message message) {
-		String session = message.getChat();
-		Set<Participant> participants = getParticipantsOf(session);
-		for (Participant participant : participants) {
-			Set<Message> messages = participant.getSubscriberMessages();
-			for (Message message1 : messages) {
-				if (message1.equals(message)) {
-					messages.remove(message1);
-					break;
-				}
-			}
-			participant.setSubscriberMessages(messages);
-		}
-	}*/
 
 	public Participant getParticipantInChatById(String chatName, Long id){
 		Set<Participant> participants = getParticipantsOf(chatName);

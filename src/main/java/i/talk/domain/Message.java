@@ -1,12 +1,9 @@
 package i.talk.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Setter;
 
 @Setter
 public class Message {
-
-	//private String chat;
 
 	private String payload;
     private Participant sender;
@@ -16,25 +13,12 @@ public class Message {
 		this.sender = sender;
 	}
 
-	/*public Message(String chat, String payload) {
-		this.chat = chat;
-		this.payload = payload;
-	}*/
-
 	public Message() {
 	}
 
 	public Message(String payload) {
 		this.payload = payload;
 	}
-
-	/*public String getChat() {
-		return chat;
-	}
-
-	public void setChat(String chat) {
-		this.chat = chat;
-	}*/
 
 	public String getPayload() {
 		return payload;

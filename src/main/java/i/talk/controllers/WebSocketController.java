@@ -9,7 +9,6 @@ import i.talk.domain.SocketMessage;
 import i.talk.domain.enums.PictureUrlEnums;
 import i.talk.services.PubSubService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -22,7 +21,7 @@ import java.util.stream.Collectors;
 @Controller
 public class WebSocketController {
 
-
+    private final ObjectMapper mapper = new ObjectMapper();
     private final SimpMessagingTemplate template;
     @Autowired
     private PubSubService pubSubService;
@@ -33,61 +32,74 @@ public class WebSocketController {
     }
 
     @MessageMapping("send/message/{room}")
-    public void onReceivedMessage(@DestinationVariable String room, String message) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode jsonNode = mapper.readValue(message, JsonNode.class);
-        JsonNode oayloadNode = jsonNode.get("payload");
-        String payload = oayloadNode.asText();
-        JsonNode sender = jsonNode.get("sender");
-        JsonNode idNode = sender.get("id");
-        Long id = Long.parseLong(idNode.asText());
-        JsonNode nameNode = sender.get("name");
-        String name = nameNode.asText();
-        Message messageObj = new Message(payload);
-        Participant participant = new Participant(id, name);
-        messageObj.setSender(participant);
+    public void onReceivedMessage(@DestinationVariable String room, String message) {
         this.template.convertAndSend("/chat/" + room, message);
     }
-
-    @MessageMapping("join/{room}")
-    public void joinChannel(@DestinationVariable String room, String joinedMessage) throws IOException {
-
-        ObjectMapper mapper = new ObjectMapper();
-        Long id = getFirstFreeIdIn(room);
-        JsonNode jsonNode = mapper.readValue(joinedMessage, JsonNode.class);
+    String getNameFrom(String message) throws IOException{
+        JsonNode jsonNode = mapper.readValue(message, JsonNode.class);
         JsonNode nameNode = jsonNode.get("name");
-        String name = nameNode.asText();
+        return nameNode.asText();
+    }
+    String getOperationFrom(String message) throws IOException{
+        JsonNode jsonNode = mapper.readValue(message, JsonNode.class);
         JsonNode operationNode = jsonNode.get("operation");
-        String operation = operationNode.asText();
+        return operationNode.asText();
+    }
+
+    Participant generateParticipant(String name, String room){
+        Long id = getFirstFreeIdIn(room);
         Participant participant = new Participant(id, name);
         String imageUrl = PictureUrlEnums.getRandom().label;
         participant.setImageUrl(imageUrl);
-        participant.setOperation(operation);
-		String result = mapper.writeValueAsString(participant);
+        return participant;
+    }
+
+    Participant addParticipantToRoom(String room, String name) throws IOException{
         if(pubSubService.getParticipantsOf(room).stream().map(x->x.getName()).collect(Collectors.toSet()).contains(name)){
             throw new IOException();
         }
+        Participant participant = generateParticipant(name, room);
         pubSubService.addParticipant(room, participant);
-		this.template.convertAndSend("/chat/" + room, result);
-		sendHasJoinedMessage(room, name);
-		sendCurrentParticipantsOf(room);
+        return participant;
     }
 
-	private void sendCurrentParticipantsOf(String room) throws JsonProcessingException {
+    String generateParticipantJoinedResponse(String room, String joinedMessage) throws IOException{
+        String name = getNameFrom(joinedMessage);
+        Participant participant = addParticipantToRoom(room, name);
+        String operation = getOperationFrom(joinedMessage);
+        String participantJson = mapper.writeValueAsString(participant);
+        SocketMessage m = new SocketMessage(operation, participantJson);
+        return mapper.writeValueAsString(m);
+    }
+    @MessageMapping("join/{room}")
+    public void joinChannel(@DestinationVariable String room, String joinedMessage) throws IOException {
+        sendParticipantInfo(room, joinedMessage);
+		sendCurrentParticipantsOf(room);
+        sendHasJoinedMessage(room, joinedMessage);
+    }
+
+    private void sendParticipantInfo(@DestinationVariable String room, String joinedMessage) throws IOException {
+        String response = generateParticipantJoinedResponse(room, joinedMessage);
+        this.template.convertAndSend("/chat/" + room, response);
+    }
+
+    private void sendCurrentParticipantsOf(String room) throws JsonProcessingException {
 		Set<Participant> participants = pubSubService.getParticipantsOf(room);
 		String participantMessage = new ObjectMapper().writeValueAsString(participants);
 		this.template.convertAndSend("/chat/" + room, participantMessage);
 	}
 
-	private void sendHasJoinedMessage(String room, String name) throws IOException {
-		String message = getMessage(room, name);
+	private void sendHasJoinedMessage(String room, String message1) throws IOException {
+        String name = getNameFrom(message1);
+		String message = composeAutomaticJoinedMessage(room, name);
 		this.template.convertAndSend("/chat/" + room, message);
 	}
 
-	private String getMessage(String room, String name) throws IOException {
-		Message message = new SocketMessage("SEND");
-		message.setPayload(name + " on liitunud ruumi : " + room);
-		return new ObjectMapper().writeValueAsString(message);
+	private String composeAutomaticJoinedMessage(String room, String name) throws IOException {
+		Message message = new Message(name + " on liitunud ruumi : " + room);
+		String m = mapper.writeValueAsString(message);
+		SocketMessage me = new SocketMessage("SEND", m);
+		return new ObjectMapper().writeValueAsString(me);
 	}
 
     private Long getFirstFreeIdIn(String chatName) {

@@ -16,8 +16,6 @@ import java.util.Set;
 @Setter
 public class Participant{
 
-	private String operation;
-
 	private Long id = 0L;
 
 	private String imageUrl;
@@ -35,9 +33,6 @@ public class Participant{
 		this.name = name;
 	}
 
-
-
-
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -52,57 +47,7 @@ public class Participant{
 		return name;
 	}
 
-    @Override
-    public String toString() {
-        return "Participant{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", subscribedMessages=" + subscribedMessages +
-                '}';
-    }
-
     private Set<Message> subscribedMessages = new HashSet<>();
-
-	//public void setSubscriberMessages(Set<Message> subscriberMessages) {
-	//	this.subscriberMessages = subscriberMessages;
-	//}
-
-	//public Set<Message> getSubscriberMessages(){
-	//	return subscriberMessages;
-	//}
-
-	//public void accept(Message message){
-	//	subscriberMessages.add(message);
-	//}
-
-
-
-	//public void getParticipantMessages(Set<Message> subscriberMessages){
-	//	this.subscriberMessages = subscriberMessages;
-	//}
-
-	/*public void send(Message message, PubSubService pubSubService) {
-		pubSubService.addMessageToQueue(message);
-		pubSubService.broadcast();
-	}
-
-	public void remove(Message message, PubSubService pubSubService){
-		pubSubService.removeMessageFromAllParticipants(message);
-	}*/
-
-	public ChatSession join(String session){
-		return new ChatSession(session);
-	}
-
-
-	public void leave(String session,PubSubService pubSubService) {
-		pubSubService.removeParticipant(session, this);
-	}
-
-
-	/*public Set<Message> getMessagesForParticipantOf(String session,PubSubService pubSubService) {
-  		return pubSubService.getMessagesForParticipantOf(session, this);
-	}*/
 
 	public Participant changeNameTo(String newName, String session, PubSubService pubSubService) {
 		setName(newName);

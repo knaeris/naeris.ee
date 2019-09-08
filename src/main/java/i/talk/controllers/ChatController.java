@@ -1,6 +1,5 @@
 package i.talk.controllers;
 
-import i.talk.domain.ChatSession;
 import i.talk.domain.Message;
 import i.talk.domain.Participant;
 import i.talk.domain.enums.PictureUrlEnums;
@@ -19,34 +18,6 @@ public class ChatController {
 
 	@Autowired
 	private PubSubService pubSubService;
-/*
-	@PostMapping("api/chat/{chatName}")
-	public ResponseEntity<?> join(@PathVariable String chatName, @RequestBody String personName){
-		Long id = getFirstFreeIdIn(chatName);
-		Participant participant = new Participant(id, personName);
-
-		HttpHeaders responseHeaders = new HttpHeaders();
-		responseHeaders.set("X-ID", id.toString());
-		ResponseEntity<?> kk = ResponseEntity.ok()
-				.headers(responseHeaders)
-				.body(new ChatSession(chatName));
-		return kk;
-	}*/
-
-	@PutMapping("api/chat/{chatName}/changename/{id}")
-	public ResponseEntity<ChatSession> changeName(@PathVariable String chatName, @RequestBody String newName, @PathVariable Long id){
-		Participant participant = pubSubService.getParticipantInChatById(chatName, id);
-		participant.changeNameTo(newName, chatName, pubSubService);
-		Set<Participant> participants = pubSubService.getParticipantsOf(chatName);
-		ChatSession session = new ChatSession(chatName);
-		session.setParticipants(participants);
-		HttpHeaders responseHeaders = new HttpHeaders();
-		responseHeaders.set("X-ID", participant.getId().toString());
-		responseHeaders.set("X-Name", participant.getName());
-		return ResponseEntity.ok()
-				.headers(responseHeaders)
-				.body(session);
-	}
 
 	@PostMapping("api/chat/{chatName}/send")
 	public ResponseEntity<?> send(@PathVariable String chatName, @RequestBody Message message, @RequestHeader Map<String, String> headers){
@@ -58,7 +29,8 @@ public class ChatController {
 	}
 	@GetMapping("api/chat/{chatName}/participants")
 	private ResponseEntity<?> getParticipant(@PathVariable String chatName){
-		return ResponseEntity.ok().body(this.pubSubService.getParticipantsOf(chatName));
+		Set<Participant> participants = this.pubSubService.getParticipantsOf(chatName);
+		return ResponseEntity.ok().body(participants);
 	}
 	private Long getFirstFreeIdIn(String chatName) {
 		Set<Long> ids = getAllParticipantIdsInChat(chatName);
