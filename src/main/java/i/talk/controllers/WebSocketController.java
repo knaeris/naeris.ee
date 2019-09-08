@@ -9,6 +9,7 @@ import i.talk.domain.SocketMessage;
 import i.talk.domain.enums.PictureUrlEnums;
 import i.talk.services.PubSubService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -50,6 +51,7 @@ public class WebSocketController {
 
     @MessageMapping("join/{room}")
     public void joinChannel(@DestinationVariable String room, String joinedMessage) throws IOException {
+
         ObjectMapper mapper = new ObjectMapper();
         Long id = getFirstFreeIdIn(room);
         JsonNode jsonNode = mapper.readValue(joinedMessage, JsonNode.class);
@@ -62,11 +64,13 @@ public class WebSocketController {
         participant.setImageUrl(imageUrl);
         participant.setOperation(operation);
 		String result = mapper.writeValueAsString(participant);
-
+        if(pubSubService.getParticipantsOf(room).stream().map(x->x.getName()).collect(Collectors.toSet()).contains(name)){
+            throw new IOException();
+        }
+        pubSubService.addParticipant(room, participant);
 		this.template.convertAndSend("/chat/" + room, result);
 		sendHasJoinedMessage(room, name);
 		sendCurrentParticipantsOf(room);
-        pubSubService.addParticipant(room, participant);
     }
 
 	private void sendCurrentParticipantsOf(String room) throws JsonProcessingException {

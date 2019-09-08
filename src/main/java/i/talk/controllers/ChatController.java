@@ -19,22 +19,19 @@ public class ChatController {
 
 	@Autowired
 	private PubSubService pubSubService;
-
+/*
 	@PostMapping("api/chat/{chatName}")
 	public ResponseEntity<?> join(@PathVariable String chatName, @RequestBody String personName){
 		Long id = getFirstFreeIdIn(chatName);
 		Participant participant = new Participant(id, personName);
-		if(pubSubService.getParticipantsOf(chatName).stream().map(x->x.getName()).collect(Collectors.toSet()).contains(personName)){
-			return ResponseEntity.badRequest().body(null);
-		}
-		ChatSession session = participant.join(chatName, pubSubService);
+
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.set("X-ID", id.toString());
 		ResponseEntity<?> kk = ResponseEntity.ok()
 				.headers(responseHeaders)
-				.body(session);
+				.body(new ChatSession(chatName));
 		return kk;
-	}
+	}*/
 
 	@PutMapping("api/chat/{chatName}/changename/{id}")
 	public ResponseEntity<ChatSession> changeName(@PathVariable String chatName, @RequestBody String newName, @PathVariable Long id){
@@ -60,7 +57,7 @@ public class ChatController {
 				.body(message);
 	}
 	@GetMapping("api/chat/{chatName}/participants")
-	private ResponseEntity<?> getParticipantIds(@PathVariable String chatName){
+	private ResponseEntity<?> getParticipant(@PathVariable String chatName){
 		return ResponseEntity.ok().body(this.pubSubService.getParticipantsOf(chatName));
 	}
 	private Long getFirstFreeIdIn(String chatName) {

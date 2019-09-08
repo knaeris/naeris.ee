@@ -90,8 +90,7 @@ public class Participant{
 		pubSubService.removeMessageFromAllParticipants(message);
 	}*/
 
-	public ChatSession join(String session, PubSubService pubSubService){
-		//pubSubService.addParticipant(session, this);
+	public ChatSession join(String session){
 		return new ChatSession(session);
 	}
 
