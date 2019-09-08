@@ -12,6 +12,6 @@ import lombok.Setter;
 public class SocketMessage {
 
     private String operation;
-    private String objectJSON;
+    private String payload;
 
 }

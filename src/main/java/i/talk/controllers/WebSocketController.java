@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import i.talk.domain.Message;
 import i.talk.domain.Participant;
 import i.talk.domain.SocketMessage;
+import i.talk.domain.enums.OperationEnum;
 import i.talk.domain.enums.PictureUrlEnums;
 import i.talk.services.PubSubService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -32,13 +34,21 @@ public class WebSocketController {
     }
 
     @MessageMapping("send/message/{room}")
-    public void onReceivedMessage(@DestinationVariable String room, String message) {
-        this.template.convertAndSend("/chat/" + room, message);
+    public void onReceivedMessage(@DestinationVariable String room, String message) throws IOException{
+        String operation = getOperationFrom(message);
+        Message message1 = mapper.readValue(getPayload(message), Message.class);
+        message1.setTimeStamp(new Timestamp(System.currentTimeMillis()).getTime());
+        SocketMessage socketMessage = new SocketMessage();
+        socketMessage.setOperation(operation);
+        socketMessage.setPayload(mapper.writeValueAsString(message1));
+        String result = mapper.writeValueAsString(socketMessage);
+        this.template.convertAndSend("/chat/" + room, result);
     }
-    String getNameFrom(String message) throws IOException{
+
+    String getPayload(String message) throws IOException{
         JsonNode jsonNode = mapper.readValue(message, JsonNode.class);
-        JsonNode nameNode = jsonNode.get("name");
-        return nameNode.asText();
+        JsonNode payloadNode = jsonNode.get("payload");
+        return payloadNode.asText();
     }
     String getOperationFrom(String message) throws IOException{
         JsonNode jsonNode = mapper.readValue(message, JsonNode.class);
@@ -64,7 +74,7 @@ public class WebSocketController {
     }
 
     String generateParticipantJoinedResponse(String room, String joinedMessage) throws IOException{
-        String name = getNameFrom(joinedMessage);
+        String name = getPayload(joinedMessage);
         Participant participant = addParticipantToRoom(room, name);
         String operation = getOperationFrom(joinedMessage);
         String participantJson = mapper.writeValueAsString(participant);
@@ -90,7 +100,7 @@ public class WebSocketController {
 	}
 
 	private void sendHasJoinedMessage(String room, String message1) throws IOException {
-        String name = getNameFrom(message1);
+        String name = getPayload(message1);
 		String message = composeAutomaticJoinedMessage(room, name);
 		this.template.convertAndSend("/chat/" + room, message);
 	}
@@ -98,7 +108,7 @@ public class WebSocketController {
 	private String composeAutomaticJoinedMessage(String room, String name) throws IOException {
 		Message message = new Message(name + " on liitunud ruumi : " + room);
 		String m = mapper.writeValueAsString(message);
-		SocketMessage me = new SocketMessage("SEND", m);
+		SocketMessage me = new SocketMessage(OperationEnum.SEND.value, m);
 		return new ObjectMapper().writeValueAsString(me);
 	}
 
