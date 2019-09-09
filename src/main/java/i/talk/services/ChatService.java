@@ -2,26 +2,54 @@ package i.talk.services;
 
 import i.talk.domain.Message;
 import i.talk.domain.Participant;
+import i.talk.domain.enums.PictureUrlEnums;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class PubSubService {
+public class ChatService {
 
-	Map<String, Set<Participant>> chatParticipantsMap = new HashMap<String, Set<Participant>>();
+	private Map<String, Set<Participant>> chatParticipantsMap = new HashMap<String, Set<Participant>>();
 
-	Queue<Message> messageQueue = new LinkedList<Message>();
+	private Queue<Message> messageQueue = new LinkedList<Message>();
 
 	public void addMessageToQueue(Message message) {
 		messageQueue.add(message);
 	}
 
-	public void addParticipant(String session, Participant participant) {
+	public Participant addParticipantToRoom(String room, String name) throws IOException {
+		if(getParticipantsOf(room).stream().map(x->x.getName()).collect(Collectors.toSet()).contains(name)){
+			throw new IOException();
+		}
+		Participant participant = generateParticipant(name, room);
+		addParticipant(room, participant);
+		return participant;
+	}
+
+	private Participant generateParticipant(String name, String room){
+		Long id = getFirstFreeIdIn(room);
+		Participant participant = new Participant(id, name);
+		String imageUrl = PictureUrlEnums.getRandom().label;
+		participant.setImageUrl(imageUrl);
+		return participant;
+	}
+
+	private Long getFirstFreeIdIn(String chatName) {
+		Set<Participant> participants = getParticipantsOf(chatName);
+		Set<Long> ids = participants.stream().map(x -> x.getId()).collect(Collectors.toSet());
+		Long id = 1L;
+		while(ids.contains(id)){
+			id++;
+		}
+		return id;
+	}
+
+	private void addParticipant(String session, Participant participant) {
 		if (chatParticipantsMap.containsKey(session)) {
 			Set<Participant> subscribers = chatParticipantsMap.get(session);
-			Set<String> subscribersNames = subscribers.stream().map(x -> x.getName()).collect(Collectors.toSet());
 			subscribers.add(participant);
 			chatParticipantsMap.put(session, subscribers);
 		} else {
@@ -31,10 +59,15 @@ public class PubSubService {
 		}
 	}
 
-	public void removeParticipant(String session, Participant participant) {
+	public void removeParticipant(String session, String name) {
 		if (chatParticipantsMap.containsKey(session)) {
 			Set<Participant> subscribers = chatParticipantsMap.get(session);
-			subscribers.remove(participant);
+			Participant p = subscribers
+					.stream()
+					.filter(item -> item.getName().equals(name))
+					.findFirst()
+					.orElse(null);
+			subscribers.remove(p);
 			chatParticipantsMap.put(session, subscribers);
 		}
 	}

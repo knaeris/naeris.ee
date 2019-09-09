@@ -1,9 +1,6 @@
 package i.talk.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import i.talk.services.PubSubService;
-import lombok.AllArgsConstructor;
+import i.talk.services.ChatService;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -49,9 +46,9 @@ public class Participant{
 
     private Set<Message> subscribedMessages = new HashSet<>();
 
-	public Participant changeNameTo(String newName, String session, PubSubService pubSubService) {
+	public Participant changeNameTo(String newName, String session, ChatService chatService) {
 		setName(newName);
-		Set<Participant> participants = pubSubService.getParticipantsOf(session);
+		Set<Participant> participants = chatService.getParticipantsOf(session);
 		for(Participant p : participants){
 			if(p.getId() == id){
 				p.setName(newName);

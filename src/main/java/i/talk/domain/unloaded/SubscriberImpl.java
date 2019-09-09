@@ -1,7 +1,5 @@
 package i.talk.domain.unloaded;
 
-import i.talk.services.PubSubService;
-
 //public class SubscriberImpl extends Subscriber{
 
 

@@ -1,7 +1,7 @@
 package i.talk.domain.unloaded;
 
 import i.talk.domain.Message;
-import i.talk.services.PubSubService;
+import i.talk.services.ChatService;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -18,11 +18,11 @@ public abstract class Subscriber {
 		this.subscriberMessages = subscriberMessages;
 	}
 
-	public abstract void addSubscriber(String topic, PubSubService pubSubService);
+	public abstract void addSubscriber(String topic, ChatService chatService);
 
-	public abstract void unSubscribe(String topic, PubSubService pubSubService);
+	public abstract void unSubscribe(String topic, ChatService chatService);
 
-	public abstract void getMessagesForSubscriberOf(String topic, PubSubService pubSubService);
+	public abstract void getMessagesForSubscriberOf(String topic, ChatService chatService);
 
 	/*public void printMessages(){
 		for(Message message : subscriberMessages){
