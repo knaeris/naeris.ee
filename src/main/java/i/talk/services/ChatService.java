@@ -20,16 +20,12 @@ public class ChatService {
 		messageQueue.add(message);
 	}
 
-	public Participant addParticipantToRoom(String room, String name) throws IOException {
+	public void validateNameAlreadyDoesntExist(String room, String name) throws IOException{
 		if(getParticipantsOf(room).stream().map(x->x.getName()).collect(Collectors.toSet()).contains(name)){
 			throw new IOException();
 		}
-		Participant participant = generateParticipant(name, room);
-		addParticipant(room, participant);
-		return participant;
 	}
-
-	private Participant generateParticipant(String name, String room){
+	public Participant generateParticipantFromName(String name, String room){
 		Long id = getFirstFreeIdIn(room);
 		Participant participant = new Participant(id, name);
 		String imageUrl = PictureUrlEnums.getRandom().label;
@@ -47,7 +43,7 @@ public class ChatService {
 		return id;
 	}
 
-	private void addParticipant(String session, Participant participant) {
+	public void addParticipant(String session, Participant participant) {
 		if (chatParticipantsMap.containsKey(session)) {
 			Set<Participant> subscribers = chatParticipantsMap.get(session);
 			subscribers.add(participant);

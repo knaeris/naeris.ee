@@ -17,62 +17,53 @@ public class MessageService {
 
     private final ObjectMapper mapper = new ObjectMapper();
 
-    @Autowired
-    private ChatService chatService;
-
-    public String composeAutomaticJoinedMessage(String room, String joinedMessage) throws IOException {
-        String name = getPayload(joinedMessage);
-        Message message = new Message(name + " on liitunud ruumi : " + room);
-        message.setTimeStamp(new Timestamp(System.currentTimeMillis()).getTime());
-        String m = mapper.writeValueAsString(message);
-        SocketMessage me = new SocketMessage(OperationEnum.SEND.value, m);
-        return new ObjectMapper().writeValueAsString(me);
+    public String generateDeletedMessageResponse(Message message)throws IOException{
+        return generateResponse(OperationEnum.DELETE, message);
     }
 
-    public String generateParticipantJoinedResponse(String room, String joinedMessage) throws IOException{
-        String name = getPayload(joinedMessage);
-        Participant participant = chatService.addParticipantToRoom(room, name);
-        String operation = getOperationFrom(joinedMessage);
-        String participantJson = mapper.writeValueAsString(participant);
-        SocketMessage m = new SocketMessage(operation, participantJson);
-        return mapper.writeValueAsString(m);
+    public String generateHasJoinedMessageResponse(Message message) throws IOException {
+        return generateResponse(OperationEnum.JOIN, message);
     }
 
-    public String timeStamp(String message) throws IOException {
-        SocketMessage socketMessage = addTimeStampTo(message);
-        return mapper.writeValueAsString(socketMessage);
+    public String generateHasLeftMessageResponse(Message message) throws IOException {
+        return generateResponse(OperationEnum.LEAVE, message);
     }
 
-    private SocketMessage addTimeStampTo(String message) throws IOException {
-        String operation = getOperationFrom(message);
-        Message message1 = mapper.readValue(getPayload(message), Message.class);
-        message1.setTimeStamp(new Timestamp(System.currentTimeMillis()).getTime());
-        SocketMessage socketMessage = new SocketMessage();
-        socketMessage.setOperation(operation);
-        socketMessage.setPayload(mapper.writeValueAsString(message1));
-        return socketMessage;
+    public String generateJoinedParticipantResponse(Participant person) throws IOException{
+        return generateResponse(OperationEnum.JOIN, person);
     }
 
     public String getPayload(String message) throws IOException{
-        JsonNode jsonNode = mapper.readValue(message, JsonNode.class);
-        JsonNode payloadNode = jsonNode.get("payload");
-        return payloadNode.asText();
+        return getFieldFrom(message, "payload");
     }
-    public String getOperationFrom(String message) throws IOException{
+
+    public String timeStamp(String message) throws IOException {
+        Message message1 = extractMessage(message);
+        message1.setTimeStamp(new Timestamp(System.currentTimeMillis()).getTime());
+        return generateResponse(OperationEnum.SEND, message1);
+    }
+
+    public Message generateMessage(String joinedMessage) throws IOException{
+        String name = getPayload(joinedMessage);
+        Message message = new Message(name);
+        message.setTimeStamp(new Timestamp(System.currentTimeMillis()).getTime());
+        return message;
+    }
+
+    private String getFieldFrom(String message, String fieldName) throws IOException{
         JsonNode jsonNode = mapper.readValue(message, JsonNode.class);
-        JsonNode operationNode = jsonNode.get("operation");
+        JsonNode operationNode = jsonNode.get(fieldName);
         return operationNode.asText();
     }
 
-    public String composeSocketMessage(String message) throws IOException{
-        String name = getPayload(message);
-        String operation = getOperationFrom(message);
-        SocketMessage m = new SocketMessage();
-        Message me= new Message(name);
-        me.setTimeStamp(new Timestamp(System.currentTimeMillis()).getTime());
-        String meString = mapper.writeValueAsString(me);
-        m.setOperation(operation);
-        m.setPayload(meString);
+    private String generateResponse(OperationEnum operation, Object o) throws IOException{
+        String participantJson = mapper.writeValueAsString(o);
+        SocketMessage m = new SocketMessage(operation.value, participantJson);
         return mapper.writeValueAsString(m);
+    }
+
+    public Message extractMessage(String message) throws IOException{
+        String payload = getPayload(message);
+        return mapper.readValue(payload, Message.class);
     }
 }

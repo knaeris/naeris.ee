@@ -8,7 +8,6 @@ import lombok.Setter;
 import java.util.HashSet;
 import java.util.Set;
 @Data
-//@AllArgsConstructor
 @NoArgsConstructor
 @Setter
 public class Participant{
@@ -45,16 +44,5 @@ public class Participant{
 	}
 
     private Set<Message> subscribedMessages = new HashSet<>();
-
-	public Participant changeNameTo(String newName, String session, ChatService chatService) {
-		setName(newName);
-		Set<Participant> participants = chatService.getParticipantsOf(session);
-		for(Participant p : participants){
-			if(p.getId() == id){
-				p.setName(newName);
-			}
-		}
-		return this;
-	}
 
 }
