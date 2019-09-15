@@ -4,9 +4,6 @@ import i.talk.domain.Message;
 import i.talk.domain.Participant;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class MessageMapper {
 

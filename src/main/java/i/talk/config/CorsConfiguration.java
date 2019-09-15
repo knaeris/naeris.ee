@@ -15,7 +15,7 @@ public class CorsConfiguration {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**").allowedMethods("GET", "POST", "PUT", "DELETE")
-                //.allowedOrigins("*")
+                .allowedOrigins("*")
                 .allowedHeaders("*")
                 .exposedHeaders("X-ID");
             }

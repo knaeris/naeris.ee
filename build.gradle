@@ -2,8 +2,8 @@ plugins {
     id 'org.springframework.boot' version '2.1.7.RELEASE'
     id 'io.spring.dependency-management' version '1.0.8.RELEASE'
     id 'java'
+    id 'war'
 }
-
 group = 'i'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
@@ -22,12 +22,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-rest'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.session:spring-session-core'
-    //compile("org.springframework.boot:spring-boot-starter-security")
-   // compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.7.0'
     compile("org.springframework.boot:spring-boot-starter-websocket")
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+    //providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
     compile group: 'com.google.code.gson', name: 'gson', version: '2.7'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-   // testCompile('org.springframework.security:spring-security-test')
 }

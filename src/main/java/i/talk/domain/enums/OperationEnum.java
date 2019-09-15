@@ -4,7 +4,8 @@ public enum OperationEnum {
     JOIN("JOIN"),
     SEND("SEND"),
     LEAVE("LEAVE"),
-    DELETE("DELETE");
+    DELETE("DELETE"),
+    CHANGE("CHANGE");
 
     public final String value;
 

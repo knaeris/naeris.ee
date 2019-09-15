@@ -1,6 +1,6 @@
 package i.talk.domain;
 
-import i.talk.services.ChatService;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -43,6 +43,7 @@ public class Participant{
 		return name;
 	}
 
+	@JsonIgnore
     private Set<Message> subscribedMessages = new HashSet<>();
 
 }

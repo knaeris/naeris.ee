@@ -20,20 +20,20 @@ public class ChatService {
 		messageQueue.add(message);
 	}
 
-	public void validateNameAlreadyDoesntExist(String room, String name) throws IOException{
+	public boolean isNameAlreadyTaken(String room, String name){
 		if(getParticipantsOf(room).stream().map(x->x.getName()).collect(Collectors.toSet()).contains(name)){
-			throw new IOException();
+			return true;
 		}
+		return false;
 	}
-	public Participant generateParticipantFromName(String name, String room){
-		Long id = getFirstFreeIdIn(room);
+	public Participant generateParticipant(String name, Long id){
 		Participant participant = new Participant(id, name);
 		String imageUrl = PictureUrlEnums.getRandom().label;
 		participant.setImageUrl(imageUrl);
 		return participant;
 	}
 
-	private Long getFirstFreeIdIn(String chatName) {
+	public Long getFirstFreeIdIn(String chatName) {
 		Set<Participant> participants = getParticipantsOf(chatName);
 		Set<Long> ids = participants.stream().map(x -> x.getId()).collect(Collectors.toSet());
 		Long id = 1L;

@@ -4,9 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Setter;
 
-import java.sql.Timestamp;
-import java.util.Date;
-
 @Setter
 public class Message {
 
