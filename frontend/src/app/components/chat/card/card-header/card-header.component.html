@@ -1,0 +1,19 @@
+<div class="card-header msg_head">
+  <div class="d-flex bd-highlight">
+    <div class="user_info">
+      <span>{{getChat()?.name}}</span>
+      <p>{{getParticipantNumber()}}</p>
+    </div>
+    <div class="video_cam">
+    </div>
+  </div>
+  <span id="action_menu_btn"><a *ngIf="getChat()" placement="bottom" (click)="leave()" ngbTooltip="Lahku ruumist">&#10062;</a></span>
+  <div class="action_menu">
+    <ul>
+      <li><i class="fas fa-user-circle"></i> View profile</li>
+      <li><i class="fas fa-users"></i> Add to close friends</li>
+      <li><i class="fas fa-plus"></i> Add to group</li>
+      <li><i class="fas fa-ban"></i> Block</li>
+    </ul>
+  </div>
+</div>

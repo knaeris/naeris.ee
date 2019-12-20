@@ -5,8 +5,8 @@ import i.talk.domain.Message;
 import i.talk.domain.NameChangeResponse;
 import i.talk.domain.Participant;
 import i.talk.services.ChatService;
-import i.talk.services.MessageService;
 import i.talk.services.ResponseService;
+import i.talk.services.SendingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -14,16 +14,15 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
-import java.sql.Timestamp;
 
 @Controller
 public class WebSocketController {
 
     private final SimpMessagingTemplate template;
     @Autowired
-    private MessageService messageService;
+    private ResponseService responseService;
     @Autowired
-    private ResponseService sendingService;
+    private SendingService sendingService;
     @Autowired
     private ChatService chatService;
 
@@ -103,7 +102,7 @@ public class WebSocketController {
     }
 
     private String timeStamp(String message) throws IOException {
-        return messageService.timeStamp(message);
+        return responseService.timeStamp(message);
     }
 
     private void addParticipantToRoom(String room, Participant p) {

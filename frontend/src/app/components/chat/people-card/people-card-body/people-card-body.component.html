@@ -1,0 +1,10 @@
+<ul class="contacts">
+    <li *ngIf="getParticipant()?.id" class="active">
+        <app-contact [contact]="getParticipant()"></app-contact>
+    </li>
+</ul>
+<ul class="contacts" *ngFor="let person of getChat()?.participants">
+    <li *ngIf="person?.id != getParticipant()?.id">
+        <app-contact [contact]="person"></app-contact>
+    </li>
+</ul>

@@ -1,0 +1,15 @@
+@media(max-width: 576px){
+    .contacts_card{
+        margin-bottom: 15px !important;
+    }
+}
+.contacts_body{
+    padding:  0.75rem 0 !important;
+    overflow-y: auto;
+    white-space: nowrap;
+}
+
+.card{
+    height: 500px;
+    border-radius: 15px !important;
+}

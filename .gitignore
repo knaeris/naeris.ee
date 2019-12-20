@@ -30,3 +30,33 @@ out/
 
 ### VS Code ###
 .vscode/
+
+*#
+
+*.jar
+*.sw?
+*~
+.#*
+.*.md.html
+.DS_Store
+.metadata
+.recommenders
+/build
+/code
+MANIFEST.MF
+_site/
+activemq-data
+bin
+build
+build.log
+dependency-reduced-pom.xml
+dump.rdb
+interpolated*.xml
+lib/
+manifest.yml
+overridedb.*
+target
+transaction-logs
+.flattened-pom.xml
+secrets.yml
+.gradletasknamecache

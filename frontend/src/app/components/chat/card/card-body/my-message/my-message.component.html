@@ -1,0 +1,8 @@
+<div class="d-flex justify-content-end mb-4">
+  <ng-template #button><span class="delete-tooltip" (click)="delete()" >Kustuta</span></ng-template>
+  <div class="msg_cotainer_send" [ngbTooltip]="button" #t="ngbTooltip" triggers="click:blur" (click)="t.open()">
+    <span style="color: #FFFFFF">{{message?.payload}}</span>
+    <span class="msg_time_send">{{parsetoDate(message?.timeStamp)}}</span>
+  </div>
+  <app-user-msg-image [participant]="message?.sender"></app-user-msg-image>
+</div>

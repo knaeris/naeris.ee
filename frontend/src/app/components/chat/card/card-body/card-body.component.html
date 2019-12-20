@@ -1,0 +1,5 @@
+<div *ngFor="let message of getParticipant()?.subscribedMessages">
+    <app-system-message *ngIf="!message.sender" [message]="message"></app-system-message>
+<app-others-message *ngIf="message.sender && message.sender?.id != getParticipant().id" [message] = message></app-others-message>
+    <app-my-message *ngIf="message.sender?.id == getParticipant().id" [message] = message></app-my-message>
+</div>

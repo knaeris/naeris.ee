@@ -1,0 +1,23 @@
+<div class="card-footer">
+  <form (ngSubmit)="sendMessage()">
+  <div *ngIf="getChat()" class="input-group">
+    <div class="input-group-append">
+      <ng-template #emojiPopover>
+        <app-emoji (emojiEmitter)="appendSmile($event)" [emojis]="getEmojis()"></app-emoji>
+      </ng-template>
+      <span class="input-group-text attach_btn">
+        <a [ngbPopover]="emojiPopover" popoverClass="popover-background" placement="right-bottom">
+          {{getSmileEmoji()}}
+        </a></span>
+    </div>
+    <input class="form-control type_msg" [(ngModel)]="content" [ngModelOptions]="{standalone: true}"
+           autofocus placeholder="Kirjuta sõnum..."/>
+    <div class="input-group-append">
+      <span class="input-group-text send_btn">
+        <a (click)="sendMessage()">
+          Saada
+        </a></span>
+    </div>
+  </div>
+  </form>
+</div>

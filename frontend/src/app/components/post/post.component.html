@@ -1,0 +1,16 @@
+<ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
+  <ngb-panel [title]="thread.title">
+    <ng-template ngbPanelContent>
+      <div class="row">
+        <div class="col-sm-4">
+      <img [src]="thread.initialPost.image.imagePath">
+        </div>
+        <div class="col-sm-8">
+      <p>
+      {{thread.initialPost.content}}
+      </p>
+        </div>
+      </div>
+    </ng-template>
+  </ngb-panel>
+</ngb-accordion>

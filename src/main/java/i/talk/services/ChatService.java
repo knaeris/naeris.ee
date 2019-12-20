@@ -21,7 +21,7 @@ public class ChatService {
 	}
 
 	public boolean isNameAlreadyTaken(String room, String name){
-		if(getParticipantsOf(room).stream().map(x->x.getName()).collect(Collectors.toSet()).contains(name)){
+		if(getParticipantsOf(room).stream().map(Participant::getName).collect(Collectors.toSet()).contains(name)){
 			return true;
 		}
 		return false;
@@ -35,7 +35,7 @@ public class ChatService {
 
 	public Long getFirstFreeIdIn(String chatName) {
 		Set<Participant> participants = getParticipantsOf(chatName);
-		Set<Long> ids = participants.stream().map(x -> x.getId()).collect(Collectors.toSet());
+		Set<Long> ids = participants.stream().map(Participant::getId).collect(Collectors.toSet());
 		Long id = 1L;
 		while(ids.contains(id)){
 			id++;
@@ -115,7 +115,7 @@ public class ChatService {
 	public Participant getParticipantInChatById(String chatName, Long id){
 		Set<Participant> participants = getParticipantsOf(chatName);
 		for(Participant participant : participants){
-			if(participant.getId() == id){
+			if(participant.getId().equals(id)){
 				return participant;
 			}
 		}
