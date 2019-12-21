@@ -73,6 +73,16 @@ export class ChatComponent implements OnInit, OnDestroy {
         return ChatComponent.participant.subscribedMessages;
     }
 
+    joinGlobal(){
+        let val =  this.chatService.joinGlobal()
+            .subscribe(r => {
+                r = JSON.stringify(r)
+                let obj  = JSON.parse(r);
+                console.log(obj.name)
+            this.joinChat("global", obj.name);
+            val.unsubscribe();
+        })
+    }
 
     parsetoDate(timestamp: number) {
         let date = new Date(timestamp)

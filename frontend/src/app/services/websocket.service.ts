@@ -10,8 +10,7 @@ import {ResponseReader} from "../model/responseReader";
 
 @Injectable()
 export class WebsocketService {
-    private serverUrl = 'http://localhost:8080/socket';
-    /*'http://134.209.21.45:8080/talk-0.0.1-SNAPSHOT/socket';*/
+    private serverUrl = /*'http://134.209.21.45:8080/talk-0.0.1-SNAPSHOT/socket'; */'http://localhost:8080/socket';
     private stompClient;
     private channel = "/chat/";
 

@@ -1,8 +1,12 @@
 package i.talk.services;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import i.talk.domain.Message;
+import i.talk.domain.NameChangeResponse;
 import i.talk.domain.Participant;
 import i.talk.domain.enums.PictureUrlEnums;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -14,7 +18,38 @@ public class ChatService {
 
 	private Map<String, Set<Participant>> chatParticipantsMap = new HashMap<String, Set<Participant>>();
 
+	@Autowired
+	private SendingService sendingService;
+
 	private Queue<Message> messageQueue = new LinkedList<Message>();
+
+	public void joinChannel( String room, String name) {
+		if (!isNameAlreadyTaken(room, name)) {
+			Participant person = generateParticipant(room, name);
+			addParticipant(room, person);
+			sendingService.sendJoinedPersonAsObject(room, person);
+			sendingService.sendHasJoinedMessageResponse(room, name);
+		}
+	}
+
+	public void leaveChannel(@DestinationVariable String room, String name) {
+		removeParticipant(room, name);
+		sendingService.sendHasLeftMessageResponse(room, name);
+	}
+
+	public void deleteMessage(@DestinationVariable String room, String message) throws IOException {
+		Message m = new ObjectMapper().readValue(message, Message.class);
+		sendingService.sendDeleteResponse(room, m);
+	}
+
+	public void changeName(String room, String name, Long id) throws IOException{
+		Participant p = getParticipantInChatById(room, id);
+		String oldName = p.getName();
+		removeParticipant(room, p.getName());
+		p.setName(name);
+		addParticipant(room, p);
+		this.sendingService.sendHasChangedNameResponse(room, new NameChangeResponse(oldName, name));
+	}
 
 	public void addMessageToQueue(Message message) {
 		messageQueue.add(message);
@@ -26,6 +61,12 @@ public class ChatService {
 		}
 		return false;
 	}
+
+	private Participant generateParticipant(String room, String name) {
+		Long id = getFirstFreeIdIn(room);
+		return generateParticipant(name, id);
+	}
+
 	public Participant generateParticipant(String name, Long id){
 		Participant participant = new Participant(id, name);
 		String imageUrl = PictureUrlEnums.getRandom().label;
@@ -67,43 +108,6 @@ public class ChatService {
 			chatParticipantsMap.put(session, subscribers);
 		}
 	}
-
-	/*public void broadcast() {
-		if (messageQueue.isEmpty()) {
-			System.out.println("no messages from publishers to display");
-		} else {
-			while (!messageQueue.isEmpty()) {
-				Message message = messageQueue.remove();
-				String session = message.getChat();
-
-				Set<Participant> chatParticipants = chatParticipantsMap.get(session);
-
-				for (Participant participant : chatParticipants) {
-					participant.accept(message);
-				}
-			}
-		}
-	}
-
-	public Set<Message> getMessagesForParticipantOf(String session, Participant participant) {
-		if (messageQueue.isEmpty()) {
-			System.out.println("no messages from publisters to display");
-		} else {
-			while (!messageQueue.isEmpty()) {
-				Message message = messageQueue.remove();
-				if (message.getChat().equalsIgnoreCase(session)) {
-					Set<Participant> chatParticipants = chatParticipantsMap.get(session);
-
-					for (Participant participant1 : chatParticipants) {
-						if (participant1.equals(participant)) {
-							participant.accept(message);
-						}
-					}
-				}
-			}
-		}
-		return participant.getSubscriberMessages();
-	}*/
 
 	public Set<Participant> getParticipantsOf(String chatSession) {
 		if (chatParticipantsMap.containsKey(chatSession)) {

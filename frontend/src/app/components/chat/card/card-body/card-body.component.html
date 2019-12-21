@@ -1,3 +1,7 @@
+<div *ngIf="!getChat()">
+
+    <h1>Liitu ruumiga <a (click)="joinGlobal()" href="javascript:void(0)">{{global}}</a></h1>
+</div>
 <div *ngFor="let message of getParticipant()?.subscribedMessages">
     <app-system-message *ngIf="!message.sender" [message]="message"></app-system-message>
 <app-others-message *ngIf="message.sender && message.sender?.id != getParticipant().id" [message] = message></app-others-message>

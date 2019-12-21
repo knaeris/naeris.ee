@@ -27,4 +27,7 @@ export class ChatService extends BaseService{
         return super.get("chat/" + chatName + "/validation/" + name);
     }
 
+    public joinGlobal(): Observable<string>{
+        return super.get("chat/join-global");
+    }
 }

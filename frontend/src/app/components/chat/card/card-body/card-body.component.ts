@@ -10,6 +10,8 @@ import {ChatService} from "../../../../services/chat.service";
 })
 export class CardBodyComponent extends CardComponent implements OnInit {
 
+  global: string = "#global";
+
   constructor(webSocketService: WebsocketService,
               chatService: ChatService) {
     super(webSocketService, chatService);
