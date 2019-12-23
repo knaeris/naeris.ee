@@ -7,12 +7,17 @@ import {Person} from "../model/person";
 import {ChatService} from "./chat.service";
 import {ChatSession} from "../model/chatsession";
 import {ResponseReader} from "../model/responseReader";
+import {KickVotePoll, Vote} from "../model/kickvotepoll";
+import {killLocalSessionSharedService, LeavingService} from "./leavingService";
+import {BehaviorSubject, Observable} from "rxjs";
 
 @Injectable()
 export class WebsocketService {
-    private serverUrl = /*'http://134.209.21.45:8080/talk-0.0.1-SNAPSHOT/socket'; */'http://localhost:8080/socket';
+   // private serverUrl = 'http://134.209.21.45:8080/talk-0.0.1-SNAPSHOT/socket';
+    private serverUrl = 'http://localhost:8080/socket';
     private stompClient;
     private channel = "/chat/";
+    public isConnected = new BehaviorSubject<boolean>(true);
 
     constructor(private chatService: ChatService) {
     }
@@ -24,6 +29,7 @@ export class WebsocketService {
         const that = this;
         this.stompClient.connect({}, (frame) => {
             that.stompClient.subscribe(that.channel + room.name, (message) => {
+                that.isConnected.next(true);
                 that.processResponsesByOperation(new ResponseReader(message.body), room, participant);
             });
             if(callback){
@@ -36,8 +42,7 @@ export class WebsocketService {
         console.log("Message Recieved from Server :: " + response);
         switch (response.operation) {
             case Operationenum.JOIN:
-                this.populateLocalUserWithData(currentUser, response);
-                this.sendHasJoinedSystemMessage(response, currentUser);
+                this.initCurrentUser(currentUser, response);
                 this.populateParticipantsOf(room);
                 break;
             case Operationenum.SEND :
@@ -47,35 +52,23 @@ export class WebsocketService {
                 this.deleteMessage(response,currentUser);
                 break;
             case Operationenum.LEAVE :
-                this.sendHasLeftSystemMessage(response, currentUser);
+                if(currentUser && response.payload && currentUser.id == response.payload.id){
+                    this.isConnected.next(false);
+                }
                 this.populateParticipantsOf(room);
                 break;
             case Operationenum.CHANGE :
                 if(currentUser.name == response.payload.oldName){
                     currentUser.name = response.payload.newName;
                 }
-                this.sendHasChangedName(response, currentUser);
                 this.populateParticipantsOf(room);
                 break;
+            case Operationenum.VOTE :
+                    let poll: KickVotePoll = response.getPayLoad();
+                    room.activePoll = poll;
+
+                break;
         }
-    }
-
-    private sendHasJoinedSystemMessage(response: ResponseReader, currentUser: Person) {
-        let responseContainsMessageObject: boolean = response.payload.timeStamp;
-        if (responseContainsMessageObject) {
-            let joiningResponse: ResponseReader = this.modifyResponse(response, 'liitus ruumiga');
-            this.convertResponseToSystemMessageForSending(joiningResponse, currentUser);
-        }
-    }
-
-    private sendHasLeftSystemMessage(wsMessage: ResponseReader, currentUser: Person) {
-        let leavingResponse: ResponseReader = this.modifyResponse(wsMessage, 'lahkus ruumist');
-        this.convertResponseToSystemMessageForSending(leavingResponse, currentUser);
-    }
-
-    private sendHasChangedName(wsMessage: ResponseReader, currentUser: Person){
-        let changeResponse: ResponseReader = this.modifyResponse(wsMessage, 'muutis enda nimeks : ' + currentUser.name);
-        this.convertResponseToSystemMessageForSending(changeResponse,currentUser);
     }
 
     private convertResponseToSystemMessageForSending(response: ResponseReader, currentUser: Person) {
@@ -83,25 +76,13 @@ export class WebsocketService {
         currentUser.subscribedMessages.push(message);
     }
 
-    private populateLocalUserWithData(currentUser: Person, wsMessage: ResponseReader) {
+    private initCurrentUser(currentUser: Person, wsMessage: ResponseReader) {
         if (!currentUser.id) {
             let person: Person = wsMessage.payload;
             currentUser.name = person.name;
             currentUser.id = person.id;
             currentUser.imageUrl = person.imageUrl;
         }
-    }
-
-    private modifyResponse(response: ResponseReader, action: string):ResponseReader {
-        let system: null = null;
-        if (response.payload.hasOwnProperty("sender") && response.payload.sender == system) {
-            response.payload.payload += " " + action;
-            return response;
-        } else if(response.payload.hasOwnProperty("message")){
-            response.payload = JSON.parse(response.payload.message) as Message;
-            response.payload.payload += " " + action;
-        }
-        return response;
     }
 
     private convertToMessage(response: ResponseReader): Message {
@@ -129,8 +110,8 @@ export class WebsocketService {
         }, 5000);
     }
 
-    sendMessage(message, room: string) {
-        this.stompClient.send("/app/send/" + room, {}, message);
+    sendMessage(message: Message, room: string) {
+        this.stompClient.send("/app/send/" + room, {}, JSON.stringify(message));
     }
 
     join(name: string, room: string) {
@@ -141,12 +122,16 @@ export class WebsocketService {
         this.stompClient.send("/app/leave/" + room, {}, name);
     }
 
-    delete(room: string, message){
-        this.stompClient.send("/app/delete/" + room, {}, message);
+    delete(room: string, message: Message){
+        this.stompClient.send("/app/delete/" + room, {}, JSON.stringify(message));
     }
 
     changeName(room: string, name: string, id: number){
         this.stompClient.send("/app/changeName/" + room + "/" + name, {}, id)
+    }
+
+    vote(room: string, vote: Vote){
+        this.stompClient.send("/app/vote/" + room, {}, JSON.stringify(vote));
     }
 
     private populateParticipantsOf(room) {

@@ -1,19 +1,39 @@
 <div class="card-header msg_head">
-  <div class="d-flex bd-highlight">
-    <div class="user_info">
-      <span>{{getChat()?.name}}</span>
-      <p>{{getParticipantNumber()}}</p>
+    <div class="d-flex bd-highlight">
+        <div class="user_info">
+            <span>{{getChat()?.name}}</span>
+            <p>{{getParticipantNumber()}}</p>
+        </div>
+        <div class="video_cam" *ngIf="getChat()?.activePoll">
+            <div style="padding: 5px">
+                <span> Kick {{getChat()?.activePoll?.personToKick?.name}} ? </span>
+                <div>
+                    <p>
+                        <ngb-progressbar type="info" [value]="getPositiveVotesSize() / getChat()?.activePoll?.positiveVotesNeeded * 100">
+                            <b>
+                                {{getPositiveVotesSize()}}/{{getChat()?.activePoll?.positiveVotesNeeded}}
+                            </b>
+                        </ngb-progressbar>
+                    </p>
+
+                </div>
+                <br>
+                <div *ngIf="!isVoted()">
+                    <a (click)="vote(true)" href="#"> Yes</a> <a href="#" (click)="vote(false)"> No</a>
+                </div>
+                <div *ngIf="isVoted()">
+                    Hääletatud!
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="video_cam">
+    <span id="action_menu_btn"><a *ngIf="getChat()" placement="bottom" (click)="leave()" ngbTooltip="Lahku ruumist">&#10062;</a></span>
+    <div class="action_menu">
+        <ul>
+            <li><i class="fas fa-user-circle"></i> View profile</li>
+            <li><i class="fas fa-users"></i> Add to close friends</li>
+            <li><i class="fas fa-plus"></i> Add to group</li>
+            <li><i class="fas fa-ban"></i> Block</li>
+        </ul>
     </div>
-  </div>
-  <span id="action_menu_btn"><a *ngIf="getChat()" placement="bottom" (click)="leave()" ngbTooltip="Lahku ruumist">&#10062;</a></span>
-  <div class="action_menu">
-    <ul>
-      <li><i class="fas fa-user-circle"></i> View profile</li>
-      <li><i class="fas fa-users"></i> Add to close friends</li>
-      <li><i class="fas fa-plus"></i> Add to group</li>
-      <li><i class="fas fa-ban"></i> Block</li>
-    </ul>
-  </div>
 </div>

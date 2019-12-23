@@ -4,6 +4,7 @@ import {Person} from "../../model/person";
 import {WebsocketService} from "../../services/websocket.service";
 import {ChatService} from "../../services/chat.service";
 import {Message} from "../../model/message";
+import {Vote} from "../../model/kickvotepoll";
 
 @Component({
     selector: 'app-chat',
@@ -22,6 +23,16 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+       let val =  this.webSocketService.isConnected.subscribe(value => {
+            if(value == true){
+            } else {
+                this.webSocketService.disconnect();
+               this.killLocalSession();
+               if(val){
+                val.unsubscribe();
+            }
+            }
+        })
     }
 
     ngOnDestroy(): void {
@@ -54,15 +65,19 @@ export class ChatComponent implements OnInit, OnDestroy {
     sendMessage(content) {
         let sender: Person =  new Person(this.getParticipant())
         let message = new Message(content, sender);
-        this.webSocketService.sendMessage(JSON.stringify(message), ChatComponent.chat.name);
+        this.webSocketService.sendMessage(message, ChatComponent.chat.name);
     }
 
     deleteMessage(message: Message) {
-        this.webSocketService.delete(this.getChat().name, JSON.stringify(message));
+        this.webSocketService.delete(this.getChat().name, message);
     }
 
     getChat() {
         return ChatComponent.chat;
+    }
+
+    getPositiveVotesSize(){
+        return this.getChat().activePoll.votes.filter(val => val.value == true).length
     }
 
     getParticipant() {
@@ -71,6 +86,24 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     getMessages() {
         return ChatComponent.participant.subscribedMessages;
+    }
+
+    callVoteKick(person: Person) {
+        this.chatService.callVoteKick(person.id, this.getChat().name, this.getParticipant().id)
+            .subscribe(canCallVote => {
+                if(canCallVote){
+                    this.vote(true);
+                }
+            }
+        )
+    }
+
+    isVoted(): boolean{
+        return this.getChat().activePoll.votes.map(vote => vote.voterId).indexOf(this.getParticipant().id) > -1;
+    }
+
+    vote(value: boolean){
+        this.webSocketService.vote(this.getChat().name, new Vote(value, this.getParticipant().id));
     }
 
     joinGlobal(){
@@ -89,9 +122,6 @@ export class ChatComponent implements OnInit, OnDestroy {
         let seconds = date.getSeconds();
         let minutes = date.getMinutes();
         let hours = date.getHours();
-        let day = date.getDay();
-        let month = date.getMonth();
-        let year = date.getFullYear();
         return hours.toString().padStart(2, "0") + ":"
             + minutes.toString().padStart(2, "0") + ":"
             + seconds.toString().padStart(2, "0");

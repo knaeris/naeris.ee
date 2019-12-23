@@ -1,5 +1,6 @@
 package i.talk.controllers;
 
+import i.talk.domain.KickVotePoll;
 import i.talk.domain.Participant;
 import i.talk.services.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,14 +32,12 @@ public class ChatController {
 
 	@GetMapping("api/chat/join-global")
 	public ResponseEntity<String> joinGlobal() {
-		String room = "global";
-		String name;
-		int i = 0;
-		do {
-			name = "user";
-			name += i++;
-		}while(chatService.isNameAlreadyTaken(room, name));
-
+		String name = chatService.getGeneratedFreeNameInGlobal();
 		return ResponseEntity.ok("{ \"name\" : \"" + name + "\" }");
+	}
+
+	@GetMapping("api/chat/{chatName}/callVoteKick/{kickedId}/{voteCallerId}")
+	public ResponseEntity<Boolean> callVote(@PathVariable String chatName, @PathVariable Long kickedId, @PathVariable Long voteCallerId){
+		return ResponseEntity.ok(chatService.callVote(chatName, kickedId, voteCallerId));
 	}
 }

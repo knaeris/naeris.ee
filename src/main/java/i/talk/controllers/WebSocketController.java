@@ -49,6 +49,11 @@ public class WebSocketController {
         chatService.changeName(room, name, id);
     }
 
+    @MessageMapping("vote/{room}")
+    public void vote(@DestinationVariable String room, String vote) {
+        chatService.vote(room, vote);
+    }
+
     private String timeStamp(String message) throws IOException {
         return ResponseService.timeStamp(message);
     }

@@ -20,6 +20,4 @@ export class PeopleCardBodyComponent extends PeopleCardComponent implements OnIn
 
   ngOnInit() {
   }
-
-
 }

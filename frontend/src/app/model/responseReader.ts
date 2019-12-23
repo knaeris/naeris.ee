@@ -1,6 +1,7 @@
 import {Operationenum} from "./operationenum";
 import {Person} from "./person";
 import {Message} from "./message";
+import {KickVotePoll} from "./kickvotepoll";
 
 export class ResponseReader{
     operation: Operationenum;

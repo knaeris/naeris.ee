@@ -56,3 +56,6 @@
     margin-bottom: 15px !important;
 }
 
+.dropdown-toggle::after{
+    display: none;
+}

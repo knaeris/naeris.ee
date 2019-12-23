@@ -3,5 +3,6 @@ export enum Operationenum {
     SEND= "SEND",
     DELETE="DELETE",
     LEAVE="LEAVE",
-    CHANGE="CHANGE"
+    CHANGE="CHANGE",
+    VOTE="VOTE"
 }

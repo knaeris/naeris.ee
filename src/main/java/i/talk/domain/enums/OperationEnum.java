@@ -5,7 +5,8 @@ public enum OperationEnum {
     SEND("SEND"),
     LEAVE("LEAVE"),
     DELETE("DELETE"),
-    CHANGE("CHANGE");
+    CHANGE("CHANGE"),
+    VOTE("VOTE");
 
     public final String value;
 

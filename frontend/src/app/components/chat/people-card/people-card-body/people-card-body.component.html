@@ -1,10 +1,19 @@
 <ul class="contacts">
     <li *ngIf="getParticipant()?.id" class="active">
+        <a href="#">
         <app-contact [contact]="getParticipant()"></app-contact>
+        </a>
     </li>
 </ul>
 <ul class="contacts" *ngFor="let person of getChat()?.participants">
     <li *ngIf="person?.id != getParticipant()?.id">
+        <div ngbDropdown>
+        <a href="#" ngbDropdownToggle id="dropdown">
         <app-contact [contact]="person"></app-contact>
+        </a>
+        <div ngbDropdownMenu aria-labelledby="dropdown">
+            <a ngbDropdownItem (click)="callVoteKick(person)">Kick</a>
+        </div>
+        </div>
     </li>
 </ul>
