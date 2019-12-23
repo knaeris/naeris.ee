@@ -21,6 +21,7 @@ public class KickVotePoll {
         this.chatName = chatName;
         this.positiveVotesNeeded = positiveVotesNeeded;
         this.votes = new ArrayList<>();
+        this.timeToVote = 60;
     }
 
     private Participant voteCaller;
@@ -32,6 +33,8 @@ public class KickVotePoll {
     private int positiveVotesNeeded;
 
     private List<Vote> votes;
+
+    private int timeToVote;
 
 
     public int getNumberOfPositiveVotes(){

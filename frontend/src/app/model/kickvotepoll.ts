@@ -18,5 +18,6 @@ export class KickVotePoll{
     chatName: string;
     positiveVotesNeeded: number;
     votes: Vote[];
+    timeToVote: number;
 
 }

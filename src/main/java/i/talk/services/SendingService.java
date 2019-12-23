@@ -75,4 +75,9 @@ public class SendingService {
         String m = generateResponse(OperationEnum.SEND, message);
         this.template.convertAndSend("/chat/" + room, m);
     }
+
+    public void sendVoteFailedSystemMessage(String chatName) {
+        String text = "Hääletus ei läinud läbi";
+        sendSystemMessage(chatName, text);
+    }
 }

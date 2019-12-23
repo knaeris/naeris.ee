@@ -25,7 +25,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        if(this.router.url) {
+        if(this.router.url && this.router.url != "/") {
             if (this.router.url == '/global') {
                 this.joinGlobal();
                 return;

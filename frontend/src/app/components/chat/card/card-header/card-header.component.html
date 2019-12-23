@@ -6,8 +6,10 @@
         </div>
         <div class="video_cam" *ngIf="getChat()?.activePoll">
             <div style="padding: 5px">
-                <span> Kick {{getChat()?.activePoll?.personToKick?.name}} ? </span>
                 <div>
+                <span> Kick {{getChat()?.activePoll?.personToKick?.name}} ?  </span> <span style="font-weight: bold;">{{getChat()?.activePoll?.timeToVote}}</span>
+                </div>
+                    <div>
                     <p>
                         <ngb-progressbar type="info" [value]="getPositiveVotesSize() / getChat()?.activePoll?.positiveVotesNeeded * 100">
                             <b>

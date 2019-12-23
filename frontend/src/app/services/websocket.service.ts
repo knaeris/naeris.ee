@@ -13,8 +13,8 @@ import {BehaviorSubject, Observable} from "rxjs";
 
 @Injectable()
 export class WebsocketService {
-    private serverUrl = 'http://134.209.21.45:8080/talk-0.0.1-SNAPSHOT/socket';
-   // private serverUrl = 'http://localhost:8080/socket';
+   // private serverUrl = 'http://134.209.21.45:8080/talk-0.0.1-SNAPSHOT/socket';
+    private serverUrl = 'http://localhost:8080/socket';
     private stompClient;
     private channel = "/chat/";
     public isConnected = new BehaviorSubject<boolean>(true);
