@@ -5,7 +5,6 @@ import i.talk.domain.*;
 import i.talk.domain.enums.PictureUrlEnums;
 import i.talk.domain.exceptions.ActivePollExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -83,7 +82,7 @@ public class ChatService {
 	}
 
 	private Participant generateParticipant(String room, String name) {
-		Long id = getFirstFreeIdIn(room);
+		Long id = getID(room);
 		return generateParticipant(name, id);
 	}
 
@@ -94,14 +93,14 @@ public class ChatService {
 		return participant;
 	}
 
-	public Long getFirstFreeIdIn(String chatName) {
+	public Long getID(String chatName) {
 		Set<Participant> participants = getParticipantsOf(chatName);
 		Set<Long> ids = participants.stream().map(Participant::getId).collect(Collectors.toSet());
 		Long id = 1L;
 		while(ids.contains(id)){
 			id++;
 		}
-		return id;
+		return id + new Random().nextInt(10000000);
 	}
 
 	public void addParticipant(String session, Participant participant) {
