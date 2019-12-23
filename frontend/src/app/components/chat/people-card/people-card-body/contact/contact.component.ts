@@ -3,6 +3,7 @@ import {Person} from "../../../../../model/person";
 import {PeopleCardBodyComponent} from "../people-card-body.component";
 import {WebsocketService} from "../../../../../services/websocket.service";
 import {ChatService} from "../../../../../services/chat.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-contact',
@@ -14,8 +15,9 @@ export class ContactComponent extends PeopleCardBodyComponent implements OnInit 
   @Input() contact: Person;
 
   constructor(webSocketService: WebsocketService,
-              chatService: ChatService) {
-    super(webSocketService, chatService);
+              chatService: ChatService,
+              router: Router) {
+    super(webSocketService,chatService, router);
   }
 
   ngOnInit() {

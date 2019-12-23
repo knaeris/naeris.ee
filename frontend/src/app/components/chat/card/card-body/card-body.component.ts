@@ -2,6 +2,7 @@ import {AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChild} from
 import {CardComponent} from "../card.component";
 import {WebsocketService} from "../../../../services/websocket.service";
 import {ChatService} from "../../../../services/chat.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-card-body',
@@ -13,10 +14,11 @@ export class CardBodyComponent extends CardComponent implements OnInit {
   global: string = "#global";
 
   constructor(webSocketService: WebsocketService,
-              chatService: ChatService) {
-    super(webSocketService, chatService);
-  }
+              chatService: ChatService,
+              router: Router) {
+    super(webSocketService, chatService, router);
 
+  }
   ngOnInit() {
   }
 

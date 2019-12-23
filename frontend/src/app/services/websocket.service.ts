@@ -13,8 +13,8 @@ import {BehaviorSubject, Observable} from "rxjs";
 
 @Injectable()
 export class WebsocketService {
-   // private serverUrl = 'http://134.209.21.45:8080/talk-0.0.1-SNAPSHOT/socket';
-    private serverUrl = 'http://localhost:8080/socket';
+    private serverUrl = 'http://134.209.21.45:8080/talk-0.0.1-SNAPSHOT/socket';
+   // private serverUrl = 'http://localhost:8080/socket';
     private stompClient;
     private channel = "/chat/";
     public isConnected = new BehaviorSubject<boolean>(true);
@@ -25,7 +25,7 @@ export class WebsocketService {
      connects(room: ChatSession, participant: Person, callback){
         let ws = new SockJS(this.serverUrl);
         this.stompClient = Stomp.over(ws);
-        //this.stompClient.debug = null
+        this.stompClient.debug = null
         const that = this;
         this.stompClient.connect({}, (frame) => {
             that.stompClient.subscribe(that.channel + room.name, (message) => {
@@ -55,7 +55,9 @@ export class WebsocketService {
                 if(currentUser && response.payload && currentUser.id == response.payload.id){
                     this.isConnected.next(false);
                 }
-                this.populateParticipantsOf(room);
+                if(currentUser){
+                    this.populateParticipantsOf(room);
+                }
                 break;
             case Operationenum.CHANGE :
                 if(currentUser.name == response.payload.oldName){

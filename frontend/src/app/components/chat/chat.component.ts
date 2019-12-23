@@ -5,6 +5,7 @@ import {WebsocketService} from "../../services/websocket.service";
 import {ChatService} from "../../services/chat.service";
 import {Message} from "../../model/message";
 import {Vote} from "../../model/kickvotepoll";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
     selector: 'app-chat',
@@ -19,20 +20,22 @@ export class ChatComponent implements OnInit, OnDestroy {
     static hasLeft: boolean = false;
 
     constructor(protected webSocketService: WebsocketService,
-                protected chatService: ChatService) {
+                protected chatService: ChatService,
+                protected router: Router) {
     }
 
     ngOnInit() {
-       let val =  this.webSocketService.isConnected.subscribe(value => {
-            if(value == true){
-            } else {
-                this.webSocketService.disconnect();
-               this.killLocalSession();
-               if(val){
-                val.unsubscribe();
+        if(this.router.url) {
+            if (this.router.url == '/global') {
+                this.joinGlobal();
+                return;
             }
-            }
-        })
+            let url: string = this.router.url.substr(1);
+            let roomAndName: string[] = url.split("/");
+            let room = roomAndName[0];
+            let name = roomAndName[1];
+            this.joinChat(room, name);
+        }
     }
 
     ngOnDestroy(): void {
@@ -49,13 +52,22 @@ export class ChatComponent implements OnInit, OnDestroy {
                     ChatComponent.chat = new ChatSession(room);
                     ChatComponent.participant = new Person("");
                     this.webSocketService.connects(ChatComponent.chat, ChatComponent.participant, () => {
-                        this.join(participantName, room)
+                        this.join(participantName, room);
                     });
                 }
            }
             val.unsubscribe();
-        })
+        });
 
+        let val2 =  this.webSocketService.isConnected.subscribe(value => {
+            if(value == false){
+                this.webSocketService.disconnect();
+                this.killLocalSession();
+                if(val2){
+                    val2.unsubscribe();
+                }
+            }
+        })
     }
 
     private join(participantName: string, room: string) {

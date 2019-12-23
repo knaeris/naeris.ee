@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {PeopleCardComponent} from "../people-card.component";
 import {WebsocketService} from "../../../../services/websocket.service";
 import {ChatService} from "../../../../services/chat.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-people-card-footer',
@@ -11,8 +12,9 @@ import {ChatService} from "../../../../services/chat.service";
 export class PeopleCardFooterComponent extends PeopleCardComponent implements OnInit {
 
   constructor(webSocketService: WebsocketService,
-              chatService: ChatService) {
-    super(webSocketService, chatService);
+              chatService: ChatService,
+              router: Router) {
+    super(webSocketService,chatService, router);
   }
 
   ngOnInit() {

@@ -8,7 +8,7 @@
 <ul class="contacts" *ngFor="let person of getChat()?.participants">
     <li *ngIf="person?.id != getParticipant()?.id">
         <div ngbDropdown>
-        <a href="#" ngbDropdownToggle id="dropdown">
+        <a href="javascript:void(0)" ngbDropdownToggle id="dropdown">
         <app-contact [contact]="person"></app-contact>
         </a>
         <div ngbDropdownMenu aria-labelledby="dropdown">

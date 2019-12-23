@@ -3,6 +3,7 @@ import {ChatSession} from "../../../model/chatsession";
 import {ChatComponent} from "../chat.component";
 import {WebsocketService} from "../../../services/websocket.service";
 import {ChatService} from "../../../services/chat.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-card',
@@ -14,8 +15,9 @@ export class CardComponent extends ChatComponent implements OnInit, AfterViewChe
   @Input() chat: ChatSession;
 
   constructor(webSocketService: WebsocketService,
-              chatService: ChatService) {
-    super(webSocketService, chatService);
+              chatService: ChatService,
+              router: Router) {
+    super(webSocketService,chatService, router);
   }
   ngOnInit() {
     this.scrollToBottom();

@@ -4,6 +4,7 @@ import {Message} from "../../../../model/message";
 import {Observable} from "rxjs";
 import {WebsocketService} from "../../../../services/websocket.service";
 import {CardComponent} from "../card.component";
+import {Router} from "@angular/router";
 
 @Component({
     selector: 'app-card-footer',
@@ -15,10 +16,10 @@ export class CardFooterComponent extends CardComponent implements OnInit {
     content: string = "";
 
     constructor(webSocketService: WebsocketService,
-                chatService: ChatService) {
-        super(webSocketService, chatService);
+                chatService: ChatService,
+                router: Router) {
+        super(webSocketService, chatService, router);
     }
-
     ngOnInit() {
     }
 

@@ -4,6 +4,7 @@ import {ChatComponent} from "../chat.component";
 import {WebsocketService} from "../../../services/websocket.service";
 import {ChatService} from "../../../services/chat.service";
 import {AppComponent} from "../../../app.component";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-people-card',
@@ -14,8 +15,9 @@ import {AppComponent} from "../../../app.component";
 export class PeopleCardComponent extends ChatComponent implements OnInit {
 
   constructor(webSocketService: WebsocketService,
-               chatService: ChatService) {
-    super(webSocketService,chatService);
+               chatService: ChatService,
+               router: Router) {
+    super(webSocketService,chatService, router);
   }
 
   ngOnInit() {

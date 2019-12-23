@@ -182,23 +182,25 @@ public class ChatService {
 		poll.getVotes().add(voteObject);
 		sendingService.sendVoteResponse(room, poll);
 
-		if(poll.getNumberOfPositiveVotes() == poll.getPositiveVotesNeeded()){
-			Participant kickedPerson = poll.getPersonToKick();
-			kick(room, kickedPerson);
-		}
+
 		if(poll.getNumberOfPositiveVotes() == poll.getPositiveVotesNeeded() || poll.getVotes().size() == getParticipantsOf(poll.getChatName()).size()) {
 			allActiveKickVotePolls.remove(poll);
 			sendingService.sendVoteResponse(room, null);
 		}
+
+		if(poll.getNumberOfPositiveVotes() == poll.getPositiveVotesNeeded()){
+				Participant kickedPerson = poll.getPersonToKick();
+				kick(room, kickedPerson);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	private void kick(String room, Participant kickedPerson) {
-		removeParticipant(room, kickedPerson.getName());
 		sendingService.sendSomeOneHasLeftOrKickedResponse(room, kickedPerson);
 		sendingService.sendHasKickedFromRoomSystemMessage(room, kickedPerson.getName());
+		removeParticipant(room, kickedPerson.getName());
 	}
 
 }

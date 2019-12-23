@@ -19,7 +19,7 @@
                 </div>
                 <br>
                 <div *ngIf="!isVoted()">
-                    <a (click)="vote(true)" href="#"> Yes</a> <a href="#" (click)="vote(false)"> No</a>
+                    <a (click)="vote(true)" href="javascript:void(0)"> Yes</a> <a href="javascript:void(0)" (click)="vote(false)"> No</a>
                 </div>
                 <div *ngIf="isVoted()">
                     Hääletatud!

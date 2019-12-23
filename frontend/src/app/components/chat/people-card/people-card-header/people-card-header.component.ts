@@ -2,6 +2,7 @@ import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {ChatService} from "../../../../services/chat.service";
 import {WebsocketService} from "../../../../services/websocket.service";
 import {PeopleCardComponent} from "../people-card.component";
+import {Router} from "@angular/router";
 
 @Component({
     selector: 'app-people-card-header',
@@ -14,8 +15,9 @@ export class PeopleCardHeaderComponent extends PeopleCardComponent implements On
     chatName: string = "";
 
     constructor(webSocketService: WebsocketService,
-                 chatService: ChatService) {
-        super(webSocketService, chatService);
+                chatService: ChatService,
+                router: Router) {
+        super(webSocketService,chatService, router);
     }
     ngOnInit() {
     }

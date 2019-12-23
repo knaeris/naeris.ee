@@ -4,9 +4,9 @@ import {ForumComponent} from "./components/forum/forum.component";
 import {ChatComponent} from "./components/chat/chat.component";
 
 const routes: Routes = [
-  {path: 'forum', component: ForumComponent},
-  //{path: 'chat' ,component: ChatComponent}
-  {path: '', component: ChatComponent}
+  {path: '', component: ChatComponent},
+  {path: ':room/:name', component: ChatComponent},
+  {path: 'global', component: ChatComponent}
 ];
 
 @NgModule({
