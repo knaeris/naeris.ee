@@ -1,9 +1,8 @@
 import {Message} from "./message";
-import {Operationenum} from "./operationenum";
 import {Websocketmessage} from "./websocketmessage";
 
 
-export class Person implements Websocketmessage{
+export class Person implements Websocketmessage {
 
     id: number;
 
@@ -13,8 +12,8 @@ export class Person implements Websocketmessage{
 
     subscribedMessages: Message[] = [];
 
-    constructor(person: any){
-        if(person){
+    constructor(person: any) {
+        if (person) {
             this.id = person.id;
             this.name = person.name;
             this.imageUrl = person.imageUrl;

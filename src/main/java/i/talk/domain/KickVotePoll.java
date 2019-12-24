@@ -7,13 +7,19 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class KickVotePoll {
+
+    private Participant voteCaller;
+    private Participant personToKick;
+    private String chatName;
+    private int positiveVotesNeeded;
+    private List<Vote> votes;
+    private int timeToVote;
 
     public KickVotePoll(Participant personToKick, Participant voteCaller, String chatName, int positiveVotesNeeded) {
         this.voteCaller = voteCaller;
@@ -24,20 +30,7 @@ public class KickVotePoll {
         this.timeToVote = 60;
     }
 
-    private Participant voteCaller;
-
-    private Participant personToKick;
-
-    private String chatName;
-
-    private int positiveVotesNeeded;
-
-    private List<Vote> votes;
-
-    private int timeToVote;
-
-
-    public int getNumberOfPositiveVotes(){
+    public int getNumberOfPositiveVotes() {
         return (int) votes.stream().filter(Vote::isValue).count();
     }
 }

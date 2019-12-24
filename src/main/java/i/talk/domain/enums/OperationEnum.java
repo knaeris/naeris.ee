@@ -11,7 +11,7 @@ public enum OperationEnum {
     public final String value;
 
 
-     OperationEnum(String value) {
+    OperationEnum(String value) {
         this.value = value;
     }
 }

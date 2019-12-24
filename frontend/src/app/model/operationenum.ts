@@ -1,8 +1,8 @@
 export enum Operationenum {
-    JOIN= "JOIN",
-    SEND= "SEND",
-    DELETE="DELETE",
-    LEAVE="LEAVE",
-    CHANGE="CHANGE",
-    VOTE="VOTE"
+    JOIN = "JOIN",
+    SEND = "SEND",
+    DELETE = "DELETE",
+    LEAVE = "LEAVE",
+    CHANGE = "CHANGE",
+    VOTE = "VOTE"
 }

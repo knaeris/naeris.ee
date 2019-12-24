@@ -4,14 +4,16 @@
             <span>{{getChat()?.name}}</span>
             <p>{{getParticipantNumber()}}</p>
         </div>
-        <div class="video_cam" *ngIf="getChat()?.activePoll">
+        <div *ngIf="getChat()?.activePoll" class="video_cam">
             <div style="padding: 5px">
                 <div>
-                <span> Kick {{getChat()?.activePoll?.personToKick?.name}} ?  </span> <span style="font-weight: bold;">{{getChat()?.activePoll?.timeToVote}}</span>
+                    <span> Kick {{getChat()?.activePoll?.personToKick?.name}} ?  </span> <span
+                        style="font-weight: bold;">{{getChat()?.activePoll?.timeToVote}}</span>
                 </div>
-                    <div>
+                <div>
                     <p>
-                        <ngb-progressbar type="info" [value]="getPositiveVotesSize() / getChat()?.activePoll?.positiveVotesNeeded * 100">
+                        <ngb-progressbar [value]="getPositiveVotesSize() / getChat()?.activePoll?.positiveVotesNeeded * 100"
+                                         type="info">
                             <b>
                                 {{getPositiveVotesSize()}}/{{getChat()?.activePoll?.positiveVotesNeeded}}
                             </b>
@@ -21,7 +23,8 @@
                 </div>
                 <br>
                 <div *ngIf="!isVoted()">
-                    <a (click)="vote(true)" href="javascript:void(0)"> Yes</a> <a href="javascript:void(0)" (click)="vote(false)"> No</a>
+                    <a (click)="vote(true)" href="javascript:void(0)"> Yes</a> <a (click)="vote(false)"
+                                                                                  href="javascript:void(0)"> No</a>
                 </div>
                 <div *ngIf="isVoted()">
                     Hääletatud!
@@ -29,7 +32,7 @@
             </div>
         </div>
     </div>
-    <span id="action_menu_btn"><a *ngIf="getChat()" placement="bottom" (click)="leave()" ngbTooltip="Lahku ruumist">&#10062;</a></span>
+    <span id="action_menu_btn"><a (click)="leave()" *ngIf="getChat()" ngbTooltip="Lahku ruumist" placement="bottom">&#10062;</a></span>
     <div class="action_menu">
         <ul>
             <li><i class="fas fa-user-circle"></i> View profile</li>

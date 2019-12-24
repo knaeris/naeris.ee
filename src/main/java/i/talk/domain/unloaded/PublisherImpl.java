@@ -5,7 +5,7 @@ import i.talk.services.ChatService;
 
 public class PublisherImpl {
 
-	public void publish(Message message, ChatService chatService) {
-		chatService.addMessageToQueue(message);
-	}
+    public void publish(Message message, ChatService chatService) {
+        chatService.addMessageToQueue(message);
+    }
 }

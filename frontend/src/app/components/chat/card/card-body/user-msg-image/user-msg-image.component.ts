@@ -6,20 +6,21 @@ import {ChatService} from "../../../../../services/chat.service";
 import {Router} from "@angular/router";
 
 @Component({
-  selector: 'app-user-msg-image',
-  templateUrl: './user-msg-image.component.html',
-  styleUrls: ['./user-msg-image.component.css']
+    selector: 'app-user-msg-image',
+    templateUrl: './user-msg-image.component.html',
+    styleUrls: ['./user-msg-image.component.css']
 })
 export class UserMsgImageComponent extends CardBodyComponent implements OnInit {
 
-  @Input() participant: Person;
-  constructor(webSocketService: WebsocketService,
-              chatService: ChatService,
-              router: Router) {
-    super(webSocketService, chatService, router);
-  }
+    @Input() participant: Person;
 
-  ngOnInit() {
-  }
+    constructor(webSocketService: WebsocketService,
+                chatService: ChatService,
+                router: Router) {
+        super(webSocketService, chatService, router);
+    }
+
+    ngOnInit() {
+    }
 
 }

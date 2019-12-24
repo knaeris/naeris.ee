@@ -1,4 +1,4 @@
 <div style="background-color: white">
-  <span  *ngFor="let emoji of emojis" (click)="emit(emoji)">{{emoji}}</span>
+    <span (click)="emit(emoji)" *ngFor="let emoji of emojis">{{emoji}}</span>
 </div>
 

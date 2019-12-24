@@ -5,13 +5,13 @@ import {Thread} from "../model/thread";
 @Injectable({
     providedIn: 'root'
 })
-export class ThreadService extends BaseService{
+export class ThreadService extends BaseService {
 
-    public getAllThreads(): Thread[]{
+    public getAllThreads(): Thread[] {
         return super.get("threads")
     }
 
-    public getThreadById(id: number):Thread{
+    public getThreadById(id: number): Thread {
         return super.get("threads/" + id);
     }
 }

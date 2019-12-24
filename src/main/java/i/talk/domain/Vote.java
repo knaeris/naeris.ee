@@ -1,6 +1,5 @@
 package i.talk.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 
 @Getter

@@ -1,11 +1,8 @@
 import {Injectable} from "@angular/core";
 import {BaseService} from "./base.service";
 import {ChatSession} from "../model/chatsession";
-import {Message} from "../model/message";
 import {Person} from "../model/person";
 import {Observable} from "rxjs";
-import {WebsocketService} from "./websocket.service";
-import {KickVotePoll} from "../model/kickvotepoll";
 
 @Injectable({
     providedIn: 'root'

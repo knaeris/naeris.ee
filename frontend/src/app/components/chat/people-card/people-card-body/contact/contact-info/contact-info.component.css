@@ -1,14 +1,15 @@
-.user_info{
+.user_info {
     margin-top: auto;
     margin-bottom: auto;
     margin-left: 15px;
 }
 
-.user_info span{
+.user_info span {
     font-size: 20px;
     color: #000000;
 }
-.user_info p{
+
+.user_info p {
     font-size: 10px;
     color: #000000;
 }

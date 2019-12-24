@@ -6,21 +6,21 @@ import {ChatService} from "../../../../../../services/chat.service";
 import {Router} from "@angular/router";
 
 @Component({
-  selector: 'app-contact-info',
-  templateUrl: './contact-info.component.html',
-  styleUrls: ['./contact-info.component.css']
+    selector: 'app-contact-info',
+    templateUrl: './contact-info.component.html',
+    styleUrls: ['./contact-info.component.css']
 })
 export class ContactInfoComponent extends ContactComponent implements OnInit {
 
-  @Input() contact: Person;
+    @Input() contact: Person;
 
-  constructor(webSocketService: WebsocketService,
-              chatService: ChatService,
-              router: Router) {
-    super(webSocketService,chatService, router);
-  }
+    constructor(webSocketService: WebsocketService,
+                chatService: ChatService,
+                router: Router) {
+        super(webSocketService, chatService, router);
+    }
 
-  ngOnInit() {
-  }
+    ngOnInit() {
+    }
 
 }

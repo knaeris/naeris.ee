@@ -1,28 +1,31 @@
-.card-header{
+.card-header {
     border-radius: 15px 15px 0 0 !important;
     border-bottom: 0 !important;
 }
 
-.msg_head{
+.msg_head {
     position: relative;
 }
 
-.img_cont{
+.img_cont {
     position: relative;
     height: 70px;
     width: 70px;
 }
 
-.user_info{
+.user_info {
     margin-top: auto;
     margin-bottom: auto;
     margin-left: 15px;
 }
 
-.video_cam{
+.video_cam {
+    margin-left: 50px;
+    margin-top: 5px;
     border-left: 6px solid red;
 }
-#action_menu_btn{
+
+#action_menu_btn {
     position: absolute;
     right: 10px;
     top: 10px;
@@ -30,48 +33,54 @@
     cursor: pointer;
     font-size: 20px;
 }
-.action_menu{
+
+.action_menu {
     z-index: 1;
     position: absolute;
     padding: 15px 0;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0, 0, 0, 0.5);
     color: #000000;
     border-radius: 15px;
     top: 30px;
     right: 15px;
     display: none;
 }
-.action_menu ul{
+
+.action_menu ul {
     list-style: none;
     padding: 0;
     margin: 0;
 }
-.action_menu ul li{
+
+.action_menu ul li {
     width: 100%;
     padding: 10px 15px;
     margin-bottom: 5px;
 }
-.action_menu ul li i{
+
+.action_menu ul li i {
     padding-right: 10px;
 
 }
-.action_menu ul li:hover{
+
+.action_menu ul li:hover {
     cursor: pointer;
-    background-color: rgba(0,0,0,0.2);
+    background-color: rgba(0, 0, 0, 0.2);
 }
 
-.user_info span{
+.user_info span {
     font-size: 20px;
     color: #000000;
 }
-.user_info p{
+
+.user_info p {
     font-size: 10px;
     color: black;
 }
 
-.user_img{
+.user_img {
     height: 70px;
     width: 70px;
-    border:1.5px solid #f5f6fa;
+    border: 1.5px solid #f5f6fa;
 
 }

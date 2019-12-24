@@ -6,21 +6,21 @@ import {ChatService} from "../../../../../services/chat.service";
 import {Router} from "@angular/router";
 
 @Component({
-  selector: 'app-system-message',
-  templateUrl: './system-message.component.html',
-  styleUrls: ['./system-message.component.css']
+    selector: 'app-system-message',
+    templateUrl: './system-message.component.html',
+    styleUrls: ['./system-message.component.css']
 })
 export class SystemMessageComponent extends CardBodyComponent implements OnInit {
 
-  @Input() message: Message;
+    @Input() message: Message;
 
-  constructor(webSocketService: WebsocketService,
-              chatService: ChatService,
-              router: Router) {
-    super(webSocketService,chatService, router);
-  }
+    constructor(webSocketService: WebsocketService,
+                chatService: ChatService,
+                router: Router) {
+        super(webSocketService, chatService, router);
+    }
 
-  ngOnInit() {
-  }
+    ngOnInit() {
+    }
 
 }

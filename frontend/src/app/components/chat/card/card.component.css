@@ -1,8 +1,8 @@
-.card{
+.card {
     height: 500px;
     border-radius: 15px !important;
 }
 
-.msg_card_body{
+.msg_card_body {
     overflow-y: auto;
 }

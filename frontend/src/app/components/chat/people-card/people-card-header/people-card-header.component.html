@@ -1,22 +1,22 @@
 <div class="card-header">
-  <div class="input-group">
-    <input type="text" placeholder="nimi"  [(ngModel)]="personName" class="form-control search">
-    <div class="input-group-prepend">
-      <span class="input-group-text search_btn" *ngIf="getChat()">
+    <div class="input-group">
+        <input [(ngModel)]="personName" class="form-control search" placeholder="nimi" type="text">
+        <div class="input-group-prepend">
+      <span *ngIf="getChat()" class="input-group-text search_btn">
         <a (click)="changeName()" class="matrix-green">Muuda</a></span>
+        </div>
     </div>
-  </div>
-  <br>
+    <br>
     <form (ngSubmit)="joinChat()">
-  <div class="input-group">
-    <input type="text" placeholder="ruum"
-           [(ngModel)]="chatName" [ngModelOptions]="{standalone: true}"
-           class="form-control search">
-    <div class="input-group-prepend">
+        <div class="input-group">
+            <input [(ngModel)]="chatName" [ngModelOptions]="{standalone: true}"
+                   class="form-control search" placeholder="ruum"
+                   type="text">
+            <div class="input-group-prepend">
       <span class="input-group-text search_btn">
         <a (click)="joinChat()" class="matrix-green">Liitu</a>
       </span>
-    </div>
-  </div>
+            </div>
+        </div>
     </form>
 </div>

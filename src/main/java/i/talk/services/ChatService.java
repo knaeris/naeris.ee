@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -38,11 +40,11 @@ public class ChatService {
 
 
                     finishedPolls.forEach(poll -> {
-                        if(poll.getVotes().size() == getParticipantsOf(poll.getChatName()).size() || poll.getTimeToVote() == 0){
-                        	sendingService.sendVoteFailedSystemMessage(poll.getChatName());
-						}
+                        if (poll.getVotes().size() == getParticipantsOf(poll.getChatName()).size() || poll.getTimeToVote() == 0) {
+                            sendingService.sendVoteFailedSystemMessage(poll.getChatName());
+                        }
                         if (poll.getNumberOfPositiveVotes() == poll.getPositiveVotesNeeded()) {
-                            kick(poll.getChatName(), poll.getPersonToKick());
+                            kick(poll.getChatName(), poll.getPersonToKick(), "hääletuse tulemused jõustusid");
                         }
                         allActiveKickVotePolls.remove(poll);
                         sendingService.sendVoteResponse(poll.getChatName(), null);
@@ -62,11 +64,11 @@ public class ChatService {
         Thread thread = new Thread(() -> {
             while (true) {
                 try {
-                    for (KickVotePoll poll : allActiveKickVotePolls) {
+                    allActiveKickVotePolls.forEach(poll -> {
                         int timeToVote = poll.getTimeToVote();
                         poll.setTimeToVote(--timeToVote);
                         this.sendingService.sendVoteResponse(poll.getChatName(), poll);
-                    }
+                    });
                     sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -74,6 +76,27 @@ public class ChatService {
             }
         });
         thread.setName("pollCountdownThread");
+        thread.start();
+    }
+
+    {
+        Thread thread = new Thread(() -> {
+            while (true) {
+                try {
+                    for (String room : chatParticipantsMap.keySet()) {
+                        for (Participant participant : chatParticipantsMap.get(room)) {
+                            if (ChronoUnit.HOURS.between(participant.timeLastMessageWasSent(), LocalDateTime.now()) >= 2) {
+                                kick(room, participant, "oli ebaaktiivne");
+                            }
+                        }
+                    }
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread.setName("InActivityScannerThread");
         thread.start();
     }
 
@@ -129,10 +152,7 @@ public class ChatService {
     }
 
     public boolean isNameAlreadyTaken(String room, String name) {
-        if (getParticipantsOf(room).stream().map(Participant::getName).collect(Collectors.toSet()).contains(name)) {
-            return true;
-        }
-        return false;
+        return getParticipantsOf(room).stream().map(Participant::getName).collect(Collectors.toSet()).contains(name);
     }
 
     private Participant generateParticipant(String room, String name) {
@@ -239,9 +259,9 @@ public class ChatService {
         }
     }
 
-    private void kick(String room, Participant kickedPerson) {
+    private void kick(String room, Participant kickedPerson, String reason) {
         sendingService.sendSomeOneHasLeftOrKickedResponse(room, kickedPerson);
-        sendingService.sendHasKickedFromRoomSystemMessage(room, kickedPerson.getName());
+        sendingService.sendHasKickedFromRoomSystemMessage(room, kickedPerson.getName(), reason);
         removeParticipant(room, kickedPerson.getName());
     }
 

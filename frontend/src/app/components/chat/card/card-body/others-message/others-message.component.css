@@ -1,16 +1,16 @@
-.img_cont_msg{
+.img_cont_msg {
     height: 40px;
     width: 40px;
 }
 
-.user_img{
+.user_img {
     height: 70px;
     width: 70px;
-    border:1.5px solid #f5f6fa;
+    border: 1.5px solid #f5f6fa;
 
 }
 
-.msg_cotainer{
+.msg_cotainer {
     color: white;
     margin-top: auto;
     margin-bottom: auto;
@@ -23,7 +23,7 @@
     min-width: 40px;
 }
 
-.msg_time{
+.msg_time {
     position: absolute;
     left: 0;
     bottom: -15px;
@@ -31,10 +31,10 @@
     font-size: 10px;
 }
 
-.msg_sender{
+.msg_sender {
     position: absolute;
     left: 10px;
     top: -15px;
-    color: rgba(255,255,255,0.5);
+    color: rgba(255, 255, 255, 0.5);
     font-size: 10px;
 }

@@ -1,7 +1,5 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {ChatService} from "../../../../services/chat.service";
-import {Message} from "../../../../model/message";
-import {Observable} from "rxjs";
 import {WebsocketService} from "../../../../services/websocket.service";
 import {CardComponent} from "../card.component";
 import {Router} from "@angular/router";
@@ -20,6 +18,7 @@ export class CardFooterComponent extends CardComponent implements OnInit {
                 router: Router) {
         super(webSocketService, chatService, router);
     }
+
     ngOnInit() {
     }
 

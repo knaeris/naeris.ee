@@ -8,21 +8,21 @@ import java.util.Set;
 
 public abstract class Subscriber {
 
-	private Set<Message> subscriberMessages = new HashSet<Message>();
+    private Set<Message> subscriberMessages = new HashSet<Message>();
 
-	public Set<Message> getSubscriberMessages(){
-		return subscriberMessages;
-	}
+    public Set<Message> getSubscriberMessages() {
+        return subscriberMessages;
+    }
 
-	public void setSubscriberMessages(Set<Message> subscriberMessages){
-		this.subscriberMessages = subscriberMessages;
-	}
+    public void setSubscriberMessages(Set<Message> subscriberMessages) {
+        this.subscriberMessages = subscriberMessages;
+    }
 
-	public abstract void addSubscriber(String topic, ChatService chatService);
+    public abstract void addSubscriber(String topic, ChatService chatService);
 
-	public abstract void unSubscribe(String topic, ChatService chatService);
+    public abstract void unSubscribe(String topic, ChatService chatService);
 
-	public abstract void getMessagesForSubscriberOf(String topic, ChatService chatService);
+    public abstract void getMessagesForSubscriberOf(String topic, ChatService chatService);
 
 	/*public void printMessages(){
 		for(Message message : subscriberMessages){

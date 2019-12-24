@@ -6,21 +6,21 @@ import {ChatService} from "../../../../../services/chat.service";
 import {Router} from "@angular/router";
 
 @Component({
-  selector: 'app-contact',
-  templateUrl: './contact.component.html',
-  styleUrls: ['./contact.component.css']
+    selector: 'app-contact',
+    templateUrl: './contact.component.html',
+    styleUrls: ['./contact.component.css']
 })
 export class ContactComponent extends PeopleCardBodyComponent implements OnInit {
 
-  @Input() contact: Person;
+    @Input() contact: Person;
 
-  constructor(webSocketService: WebsocketService,
-              chatService: ChatService,
-              router: Router) {
-    super(webSocketService,chatService, router);
-  }
+    constructor(webSocketService: WebsocketService,
+                chatService: ChatService,
+                router: Router) {
+        super(webSocketService, chatService, router);
+    }
 
-  ngOnInit() {
-  }
+    ngOnInit() {
+    }
 
 }

@@ -1,26 +1,26 @@
-.card-footer{
+.card-footer {
     border-radius: 0 0 15px 15px !important;
     border-top: 0 !important;
 }
 
-.attach_btn{
+.attach_btn {
     border-radius: 15px 0 0 15px !important;
-    background-color: rgba(0,0,0,0.3) !important;
-    border:0 !important;
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    border: 0 !important;
     color: white !important;
     cursor: pointer;
 }
 
-.type_msg{
-    border:0 !important;
+.type_msg {
+    border: 0 !important;
     height: 60px !important;
     overflow-y: auto;
 }
 
-.send_btn{
+.send_btn {
     border-radius: 0 15px 15px 0 !important;
-    background-color: rgba(0,0,0,0.3) !important;
-    border:0 !important;
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    border: 0 !important;
     color: #000000 !important;
     cursor: pointer;
 }
@@ -39,6 +39,6 @@
     border-color: #000000;
 }
 
-.bs-popover-auto[x-placement^=right]>.arrow::after, .bs-popover-right>.arrow::after{
+.bs-popover-auto[x-placement^=right] > .arrow::after, .bs-popover-right > .arrow::after {
     border-right-color: #000000;
 }

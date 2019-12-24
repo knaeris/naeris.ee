@@ -3,22 +3,23 @@ import {ThreadService} from "../../services/thread.service";
 import {Thread} from "../../model/thread";
 
 @Component({
-  selector: 'app-forum',
-  templateUrl: './forum.component.html',
-  styleUrls: ['./forum.component.css']
+    selector: 'app-forum',
+    templateUrl: './forum.component.html',
+    styleUrls: ['./forum.component.css']
 })
 export class ForumComponent implements OnInit {
 
-  threads: Thread[];
+    threads: Thread[];
 
-  constructor(private threadService: ThreadService) { }
+    constructor(private threadService: ThreadService) {
+    }
 
-  ngOnInit() {
-    this.getThreads();
-  }
+    ngOnInit() {
+        this.getThreads();
+    }
 
-  private getThreads(){
-    this.threadService.getAllThreads();
-  }
+    private getThreads() {
+        this.threadService.getAllThreads();
+    }
 
 }

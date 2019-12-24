@@ -12,7 +12,7 @@ export class Vote {
 }
 
 
-export class KickVotePoll{
+export class KickVotePoll {
     voteCaller: Person;
     personToKick: Person;
     chatName: string;

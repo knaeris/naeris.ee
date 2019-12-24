@@ -7,29 +7,38 @@ import lombok.Setter;
 @Setter
 public class Message {
 
-	private String payload;
-	@JsonSerialize(as = Participant.class)
+    private String payload;
+    @JsonSerialize(as = Participant.class)
     private Participant sender;
-	@JsonProperty("timeStamp")
+
+    @JsonProperty("timeStamp")
     private Long timeStamp;
 
-	public Message(String payload, Participant sender) {
-		this.payload = payload;
-		this.sender = sender;
-	}
+    public Message(String payload, Participant sender) {
+        this.payload = payload;
+        this.sender = sender;
+    }
 
-	public Message() {
-	}
+    public Message() {
+    }
 
-	public Message(String payload) {
-		this.payload = payload;
-	}
+    public Message(String payload) {
+        this.payload = payload;
+    }
 
-	public String getPayload() {
-		return payload;
-	}
+    public String getPayload() {
+        return payload;
+    }
 
-	public void setPayload(String payload) {
-		this.payload = payload;
-	}
+    public void setPayload(String payload) {
+        this.payload = payload;
+    }
+
+    public Participant getSender() {
+        return sender;
+    }
+
+    public Long getTimeStamp() {
+        return timeStamp;
+    }
 }

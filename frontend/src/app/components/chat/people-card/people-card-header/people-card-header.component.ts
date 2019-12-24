@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ChatService} from "../../../../services/chat.service";
 import {WebsocketService} from "../../../../services/websocket.service";
 import {PeopleCardComponent} from "../people-card.component";
@@ -17,8 +17,9 @@ export class PeopleCardHeaderComponent extends PeopleCardComponent implements On
     constructor(webSocketService: WebsocketService,
                 chatService: ChatService,
                 router: Router) {
-        super(webSocketService,chatService, router);
+        super(webSocketService, chatService, router);
     }
+
     ngOnInit() {
     }
 
@@ -33,8 +34,8 @@ export class PeopleCardHeaderComponent extends PeopleCardComponent implements On
     }
 
     changeName() {
-       super.changeName(this.personName);
-       this.personName = "";
+        super.changeName(this.personName);
+        this.personName = "";
 
     }
 }

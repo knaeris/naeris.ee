@@ -2,7 +2,6 @@ package i.talk.controllers;
 
 import i.talk.services.ChatService;
 import i.talk.services.ResponseService;
-import i.talk.services.SendingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -31,7 +30,7 @@ public class WebSocketController {
 
     @MessageMapping("join/{room}")
     public void joinChannel(@DestinationVariable String room, String name) {
-        chatService.joinChannel(room,name);
+        chatService.joinChannel(room, name);
     }
 
     @MessageMapping("leave/{room}")
@@ -41,11 +40,11 @@ public class WebSocketController {
 
     @MessageMapping("delete/{room}")
     public void deleteMessage(@DestinationVariable String room, String message) throws IOException {
-        chatService.deleteMessage(room,message);
+        chatService.deleteMessage(room, message);
     }
 
     @MessageMapping("changeName/{room}/{name}")
-    public void changeName(@DestinationVariable String room, @DestinationVariable String name, Long id) throws IOException{
+    public void changeName(@DestinationVariable String room, @DestinationVariable String name, Long id) throws IOException {
         chatService.changeName(room, name, id);
     }
 

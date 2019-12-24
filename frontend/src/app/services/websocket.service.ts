@@ -8,21 +8,20 @@ import {ChatService} from "./chat.service";
 import {ChatSession} from "../model/chatsession";
 import {ResponseReader} from "../model/responseReader";
 import {KickVotePoll, Vote} from "../model/kickvotepoll";
-import {killLocalSessionSharedService, LeavingService} from "./leavingService";
-import {BehaviorSubject, Observable} from "rxjs";
+import {BehaviorSubject} from "rxjs";
 
 @Injectable()
 export class WebsocketService {
-   // private serverUrl = 'http://134.209.21.45:8080/talk-0.0.1-SNAPSHOT/socket';
+    public isConnected = new BehaviorSubject<boolean>(true);
+    // private serverUrl = 'http://134.209.21.45:8080/talk-0.0.1-SNAPSHOT/socket';
     private serverUrl = 'http://localhost:8080/socket';
     private stompClient;
     private channel = "/chat/";
-    public isConnected = new BehaviorSubject<boolean>(true);
 
     constructor(private chatService: ChatService) {
     }
 
-     connects(room: ChatSession, participant: Person, callback){
+    connects(room: ChatSession, participant: Person, callback) {
         let ws = new SockJS(this.serverUrl);
         this.stompClient = Stomp.over(ws);
         this.stompClient.debug = null
@@ -32,7 +31,7 @@ export class WebsocketService {
                 that.isConnected.next(true);
                 that.processResponsesByOperation(new ResponseReader(message.body), room, participant);
             });
-            if(callback){
+            if (callback) {
                 callback();
             }
         }, this.errorCb);
@@ -49,54 +48,28 @@ export class WebsocketService {
                 this.convertResponseToSystemMessageForSending(response, currentUser);
                 break;
             case Operationenum.DELETE:
-                this.deleteMessage(response,currentUser);
+                this.deleteMessage(response, currentUser);
                 break;
             case Operationenum.LEAVE :
-                if(currentUser && response.payload && currentUser.id == response.payload.id){
+                if (currentUser && response.payload && currentUser.id == response.payload.id) {
                     this.isConnected.next(false);
                 }
-                if(currentUser){
+                if (currentUser) {
                     this.populateParticipantsOf(room);
                 }
                 break;
             case Operationenum.CHANGE :
-                if(currentUser.name == response.payload.oldName){
+                if (currentUser.name == response.payload.oldName) {
                     currentUser.name = response.payload.newName;
                 }
                 this.populateParticipantsOf(room);
                 break;
             case Operationenum.VOTE :
-                    let poll: KickVotePoll = response.getPayLoad();
-                    room.activePoll = poll;
+                let poll: KickVotePoll = response.getPayLoad();
+                room.activePoll = poll;
 
                 break;
         }
-    }
-
-    private convertResponseToSystemMessageForSending(response: ResponseReader, currentUser: Person) {
-        let message: Message = this.convertToMessage(response);
-        currentUser.subscribedMessages.push(message);
-    }
-
-    private initCurrentUser(currentUser: Person, wsMessage: ResponseReader) {
-        if (!currentUser.id) {
-            let person: Person = wsMessage.payload;
-            currentUser.name = person.name;
-            currentUser.id = person.id;
-            currentUser.imageUrl = person.imageUrl;
-        }
-    }
-
-    private convertToMessage(response: ResponseReader): Message {
-            let message: Message = new Message(response.payload.payload, response.payload.sender);
-            response.payload.timeStamp ? message.timeStamp = response.payload.timeStamp: (doNothing) => ({});
-            return message;
-        }
-
-
-    private deleteMessage(wsMessage: ResponseReader, participant: Person){
-        let message: Message = wsMessage.payload as Message;
-        participant.subscribedMessages = participant.subscribedMessages.filter(m => m.timeStamp != message.timeStamp);
     }
 
     disconnect() {
@@ -124,16 +97,41 @@ export class WebsocketService {
         this.stompClient.send("/app/leave/" + room, {}, name);
     }
 
-    delete(room: string, message: Message){
+    delete(room: string, message: Message) {
         this.stompClient.send("/app/delete/" + room, {}, JSON.stringify(message));
     }
 
-    changeName(room: string, name: string, id: number){
+    changeName(room: string, name: string, id: number) {
         this.stompClient.send("/app/changeName/" + room + "/" + name, {}, id)
     }
 
-    vote(room: string, vote: Vote){
+    vote(room: string, vote: Vote) {
         this.stompClient.send("/app/vote/" + room, {}, JSON.stringify(vote));
+    }
+
+    private convertResponseToSystemMessageForSending(response: ResponseReader, currentUser: Person) {
+        let message: Message = this.convertToMessage(response);
+        currentUser.subscribedMessages.push(message);
+    }
+
+    private initCurrentUser(currentUser: Person, wsMessage: ResponseReader) {
+        if (!currentUser.id) {
+            let person: Person = wsMessage.payload;
+            currentUser.name = person.name;
+            currentUser.id = person.id;
+            currentUser.imageUrl = person.imageUrl;
+        }
+    }
+
+    private convertToMessage(response: ResponseReader): Message {
+        let message: Message = new Message(response.payload.payload, response.payload.sender);
+        response.payload.timeStamp ? message.timeStamp = response.payload.timeStamp : (doNothing) => ({});
+        return message;
+    }
+
+    private deleteMessage(wsMessage: ResponseReader, participant: Person) {
+        let message: Message = wsMessage.payload as Message;
+        participant.subscribedMessages = participant.subscribedMessages.filter(m => m.timeStamp != message.timeStamp);
     }
 
     private populateParticipantsOf(room) {

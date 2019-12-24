@@ -12,8 +12,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         const request = req.clone({
-            headers: new HttpHeaders({
-            })
+            headers: new HttpHeaders({})
         })
 
         return next.handle(request).pipe(
